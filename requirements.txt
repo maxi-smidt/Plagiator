@@ -1,0 +1,17 @@
+altgraph==0.17.4
+bottle==0.12.25
+cffi==1.16.0
+clr-loader==0.2.6
+macholib==1.16.3
+modulegraph==0.19.6
+packaging==23.2
+pefile==2023.2.7
+proxy-tools==0.1.0
+py2app==0.28.6
+pycparser==2.21
+pyinstaller==6.0.0
+pyinstaller-hooks-contrib==2023.9
+pythonnet==3.0.2
+pywebview==4.3.3
+pywin32-ctypes==0.2.2
+typing_extensions==4.8.0
