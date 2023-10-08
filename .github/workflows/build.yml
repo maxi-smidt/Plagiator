@@ -17,8 +17,10 @@ jobs:
         with:
           node-version: 18
       - run: |
-          cd ./web | npm install | npm run build
-
+          cd web
+          npm install
+          npm run build
+          
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
