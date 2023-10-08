@@ -20,24 +20,23 @@ jobs:
           cd web
           npm install
           npm run build
-          
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10  # Replace with your Python version
-      - name: Setup venv
+          python-version: 3.12.0
+      - name: Setup Virtual Environment
         run: |
-          cd .. | python -m venv venv
-      - name: Activate venv
+          cd ..
+          python -m venv venv
+      - name: Activate Virtual Environment
         run: |
           .\venv\Scripts\activate
-      - name: Install Dependencies
+      - name: Install Python Dependencies 
         run: |
           pip install -r requirements.txt
-
       - name: Build Project
         run: |
-          pyinstaller --onefile --noconsole --icon='./web/dist/favicon.ico' --add-data='./web/dist/;./web/dist/' .\main.py
-      - name: deactivate venv
+          pyinstaller --onefile --noconsole --icon='./web/dist/favicon.ico' --add-data='./web/dist/;./web/dist/' main.py
+      - name: deactivate Virtual Environment
         run: |
           deactivate
