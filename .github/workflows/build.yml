@@ -26,8 +26,6 @@ jobs:
           python-version: 3.12.0
       - name: Install Python Dependencies 
         run: |
-          cd ..
-          ls
           pip install -r ./requirements.txt
       - name: Build Project
         run: |
