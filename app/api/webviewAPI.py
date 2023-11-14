@@ -1,8 +1,8 @@
 import webview
-from app.plagiatscan.plag_scan import computeComparison
+from ..plagiatscan.scan import computeComparison
 
 
-class Api:
+class API:
     def toggleFullscreen(self):
         webview.windows[0].toggle_fullscreen()
 
