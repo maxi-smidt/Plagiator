@@ -115,12 +115,15 @@ const Toolbar = ({dataCallback, ToolbarID}) => {
         if(filename !== "") {
             return (<><FileCodeIcon/> {filename}</>)
         }
-        return (<><FileCodeIcon/> Nothing slected</>)
+        return (<><FileCodeIcon/> Nothing selected</>)
     }
     return (
         <div>
-        <Button3 onClick={() => openFilePicker()}><span>{getFileName()}</span><span><UploadIcon/> Load file</span></Button3>
-      </div>
+            <Button3 onClick={() => window?.pywebview.api.health()/*() => openFilePicker()*/}>
+                <span>{getFileName()}</span>
+                <span><UploadIcon/> Load file</span>
+            </Button3>
+        </div>
     )
 
 }

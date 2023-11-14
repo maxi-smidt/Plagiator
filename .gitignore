@@ -1,8 +1,6 @@
 # IDE
 .idea
 
-# Virtual Environment
-
 # Logs
 logs
 *.log
