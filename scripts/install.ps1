@@ -1,5 +1,5 @@
 Write-Host "Building the Web..." -ForegroundColor White 
-Set-Location ..\.\web
+Set-Location .\web
 npm install
 npm run build
 Set-Location ..
