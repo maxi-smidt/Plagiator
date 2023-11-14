@@ -120,6 +120,7 @@ const Toolbar = ({dataCallback, ToolbarID}) => {
     return (
         <div>
         <Button3 onClick={() => openFilePicker()}><span>{getFileName()}</span><span><UploadIcon/> Load file</span></Button3>
+      
       </div>
     )
 

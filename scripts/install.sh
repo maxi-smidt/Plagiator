@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Building the Web..."
-cd web || exit
+cd ../web || exit
 npm install
 npm run build
 cd ..

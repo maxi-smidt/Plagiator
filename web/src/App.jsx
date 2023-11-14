@@ -39,6 +39,7 @@ function App() {
   const [files, setFiles] = useState({'A' : "", 'B': ""});
 
   const [stats, setStats] = useState({});
+
   const FileCallBack = (FileContent, ToolbarID)=> {
     let _files = cloneDeep(files);
     _files[ToolbarID] = FileContent
@@ -49,6 +50,7 @@ function App() {
 
   useEffect(() => {
     if(files['A'] && files['B']){
+      
       //TODO: call Server
       
       //setStats()
