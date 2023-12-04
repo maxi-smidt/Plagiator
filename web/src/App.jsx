@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import CodeWindow from './components/CodeWindow';
 import Toolbar from './components/Toolbar';
 import { useEffect, useState } from 'react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isFunction } from 'lodash';
 import Stats from './components/Stats';
 import React from 'react';
 
@@ -50,7 +50,11 @@ function App() {
 
   useEffect(() => {
     if(files['A'] && files['B']){
-      
+
+      if(isFunction(window?.pywebview.api.compute_comparison)){
+        window?.pywebview.api.compute_comparison(files['A'], files['B']);
+      }
+
       //TODO: call Server
       
       //setStats()

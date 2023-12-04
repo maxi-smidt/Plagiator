@@ -12,5 +12,7 @@ class API:
     def compute_comparison(self, fileL, fileR):
         print("File One")
         print(fileL)
+        print("File Two")
+        print(fileR)
         return computeComparison(fileL, fileR)
 
