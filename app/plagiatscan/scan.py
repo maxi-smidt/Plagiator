@@ -1,4 +1,6 @@
+import time
 
-def computeComparison(fileL, fileR):
-    pass
+def excute_comparison(contentL, contentR):
+    time.sleep(5)    
+    return [len(contentL), len(contentR)]
     # todo compute comparison

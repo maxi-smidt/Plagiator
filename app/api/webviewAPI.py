@@ -1,5 +1,6 @@
 import webview
-from ..plagiatscan.scan import computeComparison
+import json
+from ..plagiatscan.scan import excute_comparison
 
 
 class API:
@@ -10,9 +11,10 @@ class API:
         print("Application works!")
 
     def compute_comparison(self, fileL, fileR):
-        print("File One")
+        """ print("File One")
         print(fileL)
         print("File Two")
-        print(fileR)
-        return computeComparison(fileL, fileR)
+        print(fileR) """
+        result = excute_comparison(fileL["content"], fileR["content"])
+        return result
 

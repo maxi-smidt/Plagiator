@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 import CodeWindow from './components/CodeWindow';
 import Toolbar from './components/Toolbar';
+import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { cloneDeep, isFunction } from 'lodash';
 import Stats from './components/Stats';
 import React from 'react';
+import "react-toastify/dist/ReactToastify.css";
+import "./components/styles/custom.css";
+
 
 const ContainerDiv = styled.div`
 display: grid; 
@@ -51,8 +55,14 @@ function App() {
   useEffect(() => {
     if(files['A'] && files['B']){
 
-      if(isFunction(window?.pywebview.api.compute_comparison)){
-        window?.pywebview.api.compute_comparison(files['A'], files['B']);
+      if(isFunction(window.pywebview.api.compute_comparison)){
+        toast.promise(
+          window?.pywebview.api.compute_comparison(files['A'], files['B']),
+          {
+            pending: 'Analyzing code...',
+            success: 'Analysis completed!',
+            error: 'Analysis failed!'
+          })
       }
 
       //TODO: call Server
@@ -63,19 +73,32 @@ function App() {
 
 
   return (
+      <>
     <ContainerDiv>
+     
       <GridDiv type="Tool-A" >
       <Toolbar dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'A'}/>
       </GridDiv>
       <GridDiv type="Tool-B">
       <Toolbar dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'B'}/>
       </GridDiv>
-      <CodeWindow gridArea="Code-A" code={files['A']?.content || ""}/>
-      <CodeWindow gridArea="Code-B" code={files['B']?.content || ""}/>
+      <CodeWindow gridArea="Code-A" fileName={files['A']?.path || ""} code={files['A']?.content || ""}/>
+      <CodeWindow gridArea="Code-B" fileName={files['B']?.path || ""} code={files['B']?.content || ""}/>
       <GridDiv type="output">
         <Stats stats={stats}/>
       </GridDiv>
     </ContainerDiv>
+    <ToastContainer 
+    position="bottom-right"
+    autoClose={3000}
+    closeOnClick
+    pauseOnFocusLoss={false}
+    draggable
+    pauseOnHover
+    theme="dark"
+    
+    />
+      </>
   );
 }
 

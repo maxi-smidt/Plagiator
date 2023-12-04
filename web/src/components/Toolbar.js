@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components"
+import {toast } from 'react-toastify';
 import { useFilePicker } from 'use-file-picker';
 import { FileCodeIcon, UploadIcon} from "@primer/octicons-react";
 import { isFunction } from "lodash";
+
+const selectedColor = "#D7DAE0";
+const greyedColor = "#757982";
+const defaultColor = "transparent";
+const lighterColor = "#333842";
 
 const Button2 = styled.button`
 background-color: #21252B; 
@@ -19,12 +25,6 @@ transition: all 50ms ease-in-out;
     background-color: #33373B; 
 }
 `;
-
-const selectedColor = "#D7DAE0";
-const greyedColor = "#757982";
-const defaultColor = "transparent";
-const lighterColor = "#333842";
-
 const Button3 = styled.button`
   margin: 2px;
   position: relative;
@@ -94,12 +94,50 @@ const Button3 = styled.button`
 `;
 
 
+const Button4 = styled.button`
+background-color: #333842; 
+  border: none;
+  border-radius: 0.3em;
+  color: white;
+  padding: 0.5em 1em 0.5em 1em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  max-width: 3em;
+  
+  &:hover{
+    background-color: #757982; 
+  }
+  
+`;
+
+
+const MainContainer = styled.div`
+display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
+padding: 5px;
+`;
+
+const ToolbarContainer = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+margin-bottom: 0.4em;
+> :not(:last-child) {
+ margin-right: 0.2em;
+  }
+`;
+
 const Toolbar = ({dataCallback, ToolbarID}) => {
   
   const [filename, setFilename] = useState("");
+  
     const { openFilePicker, filesContent, loading } = useFilePicker({
         accept: '.m',
         onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
+          toast("File \"" + filesContent[0].path + "\" was selected...")
           setFilename(filesContent[0].path);
           if(filesContent[0]) {
             if (isFunction(dataCallback)){
@@ -117,13 +155,22 @@ const Toolbar = ({dataCallback, ToolbarID}) => {
         }
         return (<><FileCodeIcon/> Nothing selected</>)
     }
+
     return (
-        <div>
+        <MainContainer>{/* 
             <Button3 onClick={() => openFilePicker()}>
                 <span>{getFileName()}</span>
                 <span><UploadIcon/> Load file </span>
-            </Button3>
-        </div>
+            </Button3> */}
+            <ToolbarContainer>
+            <Button4 onClick={() => openFilePicker()}><i className="fa fa-upload"/></Button4>
+            <Button4><i className="fa fa-info-circle"/></Button4>
+           
+            
+            </ToolbarContainer>
+
+            <span>{getFileName()}</span>
+        </MainContainer>
     )
 
 }
