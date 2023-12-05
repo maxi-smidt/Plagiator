@@ -1,6 +1,9 @@
-import { Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import matlab from 'react-syntax-highlighter/dist/esm/languages/prism/matlab';
 import PlagiatorStyle from "./Tabs/CodeStyles/plagiatorstyle";
 import React from "react";
+
+SyntaxHighlighter.registerLanguage('matlab', matlab);
 
 const CodeWindow = ({code, highlightData}) => {
   return (

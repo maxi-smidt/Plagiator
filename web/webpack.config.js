@@ -1,5 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+
+
+
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: "public/index.html",
@@ -7,11 +11,22 @@ const htmlPlugin = new HtmlWebpackPlugin({
   favicon: './public/favicon.ico'
 })
 
+const analyzerPlugin = new BundleAnalyzerPlugin({
+ analyzerMode : "disabled",
+ generateStatsFile : "true",
+ statsFilename: "../logs/stats.json"
+})
+
+
 module.exports = {
   entry: "./src",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
+  },
+  performance:{
+    maxEntrypointSize: 512000, 
+    maxAssetSize: 512000
   },
   module: {
     rules: [
@@ -21,7 +36,7 @@ module.exports = {
         use: {
             loader: 'babel-loader',
             options: {
-                presets: ['@babel/preset-env']
+                presets: ['@babel/preset-env', '@babel/react']
             }
         },    
       },
@@ -37,7 +52,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx", ".css"],
+    extensions: [".*", ".js", ".jsx", ".css", ".svg"],
   },
-  plugins: [htmlPlugin]
+  plugins: [htmlPlugin, analyzerPlugin]
 };

@@ -27,7 +27,11 @@ Run `install.ps1` or `install.sh` from the _scripts_ directory to install all ne
 Build the frontend
 1. `cd .\web`
 2. `npm install`
-3. `npm run build` ~~(or `npm run watch` when you plan on changing the Frontend)~~
+3. Build the frontend
+    - `npm run build` to build it once.
+    - `npm run watch` when you plan  on changing the Frontend
+    - `npm run report` analyze to see the bundle analysis
+    - `npm run dev` to work on the frontend with hot reload in the browser (_no api connection_)
 4. `cd ..`
 #### Python
 Prepare the python side of things 

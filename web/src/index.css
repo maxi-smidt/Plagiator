@@ -7,6 +7,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%;
   color: #D7DAE0;
+  background: #21252B;
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0%;
+  }
+  100% {
+      opacity: 100%;
+  }
 }
 
 html {
@@ -22,6 +32,11 @@ html {
 /* Track */
 ::-webkit-scrollbar-track {
   background: #21212100;
+}
+
+/*Corner*/
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 /* Handle */

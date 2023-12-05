@@ -1,9 +1,9 @@
-import { CheckCircleIcon, CircleSlashIcon, GoalIcon, GraphIcon, XCircleIcon } from "@primer/octicons-react";
+import { CheckCircleIcon, GoalIcon, GraphIcon, XCircleIcon } from "@primer/octicons-react";
 import Tab, { TabItem } from "./Tabs";
 import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
-import _, { isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 
 const StatsContainer = styled.div`
     display: flex;
@@ -13,6 +13,7 @@ const StatsContainer = styled.div`
     justify-content: left;
     width: 100%;
 `;
+
 
 
 const ResultPage = styled.div`

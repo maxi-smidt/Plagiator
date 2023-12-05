@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components"
 import {toast } from 'react-toastify';
 import { useFilePicker } from 'use-file-picker';
-import { FileCodeIcon, UploadIcon} from "@primer/octicons-react";
+import { FileCodeIcon, UploadIcon, InfoIcon} from "@primer/octicons-react";
 import { isFunction } from "lodash";
 
 const selectedColor = "#D7DAE0";
@@ -105,7 +105,8 @@ background-color: #333842;
   display: inline-block;
   font-size: 1em;
   max-width: 3em;
-  
+  transition: 0.2s ease-in-out;
+
   &:hover{
     background-color: #757982; 
   }
@@ -133,7 +134,7 @@ margin-bottom: 0.4em;
 const Toolbar = ({dataCallback, ToolbarID}) => {
   
   const [filename, setFilename] = useState("");
-  
+
     const { openFilePicker, filesContent, loading } = useFilePicker({
         accept: '.m',
         onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
@@ -163,8 +164,8 @@ const Toolbar = ({dataCallback, ToolbarID}) => {
                 <span><UploadIcon/> Load file </span>
             </Button3> */}
             <ToolbarContainer>
-            <Button4 onClick={() => openFilePicker()}><i className="fa fa-upload"/></Button4>
-            <Button4><i className="fa fa-info-circle"/></Button4>
+            <Button4 onClick={() => openFilePicker()}><UploadIcon/></Button4>
+            <Button4><InfoIcon/></Button4>
            
             
             </ToolbarContainer>
