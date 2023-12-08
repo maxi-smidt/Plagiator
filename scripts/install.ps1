@@ -1,7 +1,7 @@
 param (
     [switch]${skip-web},
     [switch]${skip-app},
-    [switch]${force-package-reinstall}
+    [switch]${force-package-reinstall},
     [switch]${force-recreate-venv}
 )
 
