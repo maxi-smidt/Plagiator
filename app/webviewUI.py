@@ -16,14 +16,27 @@ class WebviewUI():
       window = webview.create_window('Plagiator', 
                               './web/dist/index.html', 
                               js_api=api,
-                              html=loading_html,
                               #minimized=True,
+                              hidden=True,
                               min_size=(1000, 600), 
                               background_color='#21252B',
                               transparent=False,
                               draggable=True,
                               frameless=True)
+
+      loading = webview.create_window('PlagiatorLoading',
+                              html=loading_html,
+                              min_size=(1000, 600), 
+                              background_color='#21252B',
+                              on_top=True,
+                              frameless=True,
+                              easy_drag=False
+                              )
       api.set_window(window)
+      api.set_lwindow(loading)
+      #window.transparent = True
+      #print(dir(window))
+      #print(vars(window))
       webview.start(api.load_web, debug=debug)
 
       

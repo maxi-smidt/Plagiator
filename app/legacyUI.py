@@ -1,6 +1,12 @@
-import tkinter as tk
-from tkinter import filedialog
+try:
+    import tkinter as tk
+    from tkinter import filedialog
+except ImportError:
+    TK_FLAG = False
+else:
+    TK_FLAG = True
 
+import logging
 
 class LegacyUI:
     def read_file(file_path, text_widget):
@@ -27,7 +33,10 @@ class LegacyUI:
         #file2_label.config(text="File 2: " + file2_path)
     
     @staticmethod
-    def run():    
+    def run():
+        if not TK_FLAG:
+            logging.critical("Unable to import tkinter, likely because python was installed without tkinter.")
+            return 
         root = tk.Tk()
         root.title("Plagiator (legacy)")
     # Create File Select Buttons
@@ -65,6 +74,7 @@ class LegacyUI:
         process_button.pack()
 
         # Start the Tkinter main loop
+        
         root.mainloop()
 
 
