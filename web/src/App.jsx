@@ -47,7 +47,7 @@ display: flex;
 flex-direction: row;
 max-width: 100%;
 max-height: 1.8em;
-color: 
+color: #74767a;
 `;
 
 
@@ -123,7 +123,7 @@ function App() {
     <>
 
     <ContainerDiv>
-      <FrameLessToolbar type="window" onClick={()=>setInfoOpen(true)} >
+      <FrameLessToolbar type="window">
         <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
         <span onClick={()=>setInfoOpen(true)}>Plagiator</span>
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
