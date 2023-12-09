@@ -91,7 +91,6 @@ function App() {
   const FileCallBack = (FileContent, ToolbarID) => {
     let _files = cloneDeep(files);
     _files[ToolbarID] = FileContent
-    console.log(_files)
     setFiles(_files)
   }
 
@@ -124,9 +123,9 @@ function App() {
     <>
 
     <ContainerDiv>
-      <FrameLessToolbar type="window">
+      <FrameLessToolbar type="window" onClick={()=>setInfoOpen(true)} >
         <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
-        Plagiator
+        <span onClick={()=>setInfoOpen(true)}>Plagiator</span>
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
       </FrameLessToolbar>
 

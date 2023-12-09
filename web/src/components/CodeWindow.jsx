@@ -22,15 +22,14 @@ const CodeWrapper = styled.div`
 
 const CodeWindow = ({code, highlightData, fileCallback}) => {
 
-  console.log(code)
   const [_style, setStyle] = useState({})
 
   const _handleOverEnter = (e) => {
     e.preventDefault();
     let newStyle = {..._style}
     newStyle["outline"] = "4px dashed white";
-    newStyle["border-radius"] = "1em";
-    newStyle["outline-offset"] = "-5px";
+    newStyle["borderRadius"] = "1em";
+    newStyle["outlineOffset"] = "-5px";
     setStyle(newStyle);
   }
   
@@ -41,7 +40,7 @@ const CodeWindow = ({code, highlightData, fileCallback}) => {
   }
   const _handleDrop = async (e) =>{
     e.preventDefault();
-    let fc = e.dataTransfer.files[0];
+    let fc = e.dataTransfer.files[0] || {};
     fc["uploaded"] = Date.now()
 
     let fr = new FileReader();
@@ -53,7 +52,7 @@ const CodeWindow = ({code, highlightData, fileCallback}) => {
       toast("File \"" + fc.path + "\" was selected...")
       const newStyle = {..._style}
       newStyle["outline"] = "0px solid white";
-      newStyle["border-radius"] = "0em";
+      newStyle["borderRadius"] = "0em";
       setStyle(newStyle)
       fileCallback({...fc});
     }

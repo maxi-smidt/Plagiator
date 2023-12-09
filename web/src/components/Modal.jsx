@@ -73,7 +73,6 @@ margin-top : 0em;
 const Modal = ({ isOpen, onClose, title, tableContent, useTable, children }) => {
     if (!isOpen) return null;
 
-    console.log(tableContent)
     return (
         <>
             <Overlay onClick={onClose} />

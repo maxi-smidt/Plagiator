@@ -150,11 +150,10 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
   const [file, setFile] = useState(data || "");
   const [isModalOpen, setModalOpen] = useState(false);
 
-  useEffect(()=> {
-    console.log(data);
-    
+  useEffect(()=> {    
     setFile(data);
   },[data])
+  
   const { openFilePicker, filesContent, loading } = useFilePicker({
     accept: '.m',
     onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
