@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components"
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useFilePicker } from 'use-file-picker';
-import { FileCodeIcon, UploadIcon, InfoIcon} from "@primer/octicons-react";
+import { FileCodeIcon, UploadIcon, InfoIcon } from "@primer/octicons-react";
 import { isFunction } from "lodash";
+import Modal from './Modal';
+
 
 const selectedColor = "#D7DAE0";
 const greyedColor = "#757982";
@@ -131,48 +133,110 @@ margin-bottom: 0.4em;
   }
 `;
 
-const Toolbar = ({dataCallback, ToolbarID}) => {
-  
-  const [filename, setFilename] = useState("");
 
-    const { openFilePicker, filesContent, loading } = useFilePicker({
-        accept: '.m',
-        onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
-          toast("File \"" + filesContent[0].path + "\" was selected...")
-          setFilename(filesContent[0].path);
-          if(filesContent[0]) {
-            if (isFunction(dataCallback)){
-              dataCallback(filesContent[0], ToolbarID);
-            }
-          }    
-        },
-      });
+const ModalTable = styled.table`
+width: 100%;
+border-collapse: collapse;
+
+tr td:first-child {
+  font-weight: bold;
+  padding-right: 2em;
+}
+
+`;
+
+const Toolbar = ({data, dataCallback, ToolbarID }) => {
+
+  const [file, setFile] = useState(data || "");
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  useEffect(()=> {
+    console.log(data);
     
-    
-    
-    const getFileName = () => {
-        if(filename !== "") {
-            return (<><FileCodeIcon/> {filename}</>)
+    setFile(data);
+  },[data])
+  const { openFilePicker, filesContent, loading } = useFilePicker({
+    accept: '.m',
+    onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
+      const fc = filesContent[0];
+      fc["contentLength"] = fc.content.length
+      fc["uploaded"] = Date.now()
+      toast("File \"" + fc.path + "\" was selected...")
+      setFile(fc);
+      if (fc) {
+        if (isFunction(dataCallback)) {
+          dataCallback(fc, ToolbarID);
         }
-        return (<><FileCodeIcon/> Nothing selected</>)
+      }
+    },
+  });
+
+
+
+  const _getFileName = () => {
+    if (file !== "") {
+      return (<><FileCodeIcon /> {file.path}</>)
+    }
+    return (<><FileCodeIcon /> Nothing selected</>)
+  }
+
+  const _getTextSizeInBytes = (text) => {
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+
+    let size = new Blob([text]).size;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex++;
     }
 
-    return (
-        <MainContainer>{/* 
+    if(unitIndex==0){
+      return size.toFixed(0) + ' ' + units[unitIndex]; 
+    }
+    return size.toFixed(2) + ' ' + units[unitIndex];
+  }
+
+  const _getDT = (time) => {
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false, // Use 24-hour format
+    };
+
+    return new Intl.DateTimeFormat('de-DE', options).format(time);
+
+  }
+
+  const ModalTableData = [["Filename", file.path], ["Modified", _getDT(file.lastModified)], ["Uploaded", _getDT(file.uploaded)], ["Size", _getTextSizeInBytes(file.content)]]
+  return (
+    <>
+      <MainContainer>{/* 
             <Button3 onClick={() => openFilePicker()}>
                 <span>{getFileName()}</span>
                 <span><UploadIcon/> Load file </span>
             </Button3> */}
-            <ToolbarContainer>
-            <Button4 onClick={() => openFilePicker()}><UploadIcon/></Button4>
-            <Button4><InfoIcon/></Button4>
-           
-            
-            </ToolbarContainer>
+        <ToolbarContainer>
+          <Button4 onClick={() => openFilePicker()}><UploadIcon /></Button4>
+          {file && <Button4 onClick={() => { setModalOpen(true) }}><InfoIcon /></Button4>}
 
-            <span>{getFileName()}</span>
-        </MainContainer>
-    )
+
+        </ToolbarContainer>
+
+        <span>{_getFileName()}</span>
+      </MainContainer>
+
+      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}
+        title={file.path}
+        tableContent={ModalTableData}
+        useTable
+      />
+       
+    </>
+  )
 
 }
 

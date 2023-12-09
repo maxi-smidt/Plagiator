@@ -16,8 +16,12 @@ const analyzerPlugin = new BundleAnalyzerPlugin({
  generateStatsFile : "true",
  statsFilename: "../logs/stats.json"
 })
-
-
+/*
+const commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
+  name: "vendor",
+  minChunks: Infinity,
+})
+*/
 module.exports = {
   entry: "./src",
   output: {

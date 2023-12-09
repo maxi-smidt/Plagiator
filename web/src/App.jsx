@@ -9,7 +9,7 @@ import Stats from './components/Stats';
 import React from 'react';
 import "react-toastify/dist/ReactToastify.css";
 import "./components/styles/custom.css";
-
+import Modal from './components/Modal';
 
 
 const ContainerDiv = styled.div`
@@ -47,6 +47,7 @@ display: flex;
 flex-direction: row;
 max-width: 100%;
 max-height: 1.8em;
+color: 
 `;
 
 
@@ -84,7 +85,7 @@ const CloseButton = styled.button`
 function App() {
 
   const [files, setFiles] = useState({'A' : "", 'B': ""});
-
+  const [isInfoOpen, setInfoOpen] = useState(false);
   const [stats, setStats] = useState({});
 
   const FileCallBack = (FileContent, ToolbarID) => {
@@ -118,24 +119,26 @@ function App() {
 
 
 
-
+  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "0.30.1"]]
   return (
     <>
 
     <ContainerDiv>
       <FrameLessToolbar type="window">
-        <ProgrammIcon maxWidth="1em" maxHeigth="1em" src="/favicon.ico"/>
+        <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
         Plagiator
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
       </FrameLessToolbar>
+
+
       <GridDiv type="Tool-A" >
-        <Toolbar dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'A'}/>
+        <Toolbar data={files['A']} dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'A'}/>
       </GridDiv>
       <GridDiv type="Tool-B">
-        <Toolbar dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'B'}/>
+        <Toolbar data={files['B']} dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'B'}/>
       </GridDiv>
-        <CodeWindow gridArea="Code-A" fileName={files['A']?.path || ""} code={files['A']?.content || ""}/>
-        <CodeWindow gridArea="Code-B" fileName={files['B']?.path || ""} code={files['B']?.content || ""}/>
+        <CodeWindow fileCallback={(FileContent) => FileCallBack(FileContent, 'A')} gridArea="Code-A" fileName={files['A']?.path || ""} code={files['A']?.content || ""}/>
+        <CodeWindow fileCallback={(FileContent) => FileCallBack(FileContent, 'B')} gridArea="Code-B" fileName={files['B']?.path || ""} code={files['B']?.content || ""}/>
       <GridDiv type="output">
         <Stats stats={stats}/>
       </GridDiv>
@@ -149,6 +152,10 @@ function App() {
     pauseOnHover
     theme="dark"
     />
+    <Modal isOpen={isInfoOpen} onClose={() => setInfoOpen(false)} 
+    title={"Plagiator"}
+    tableContent={_info} 
+    useTable/>
     </>
   );
 }
