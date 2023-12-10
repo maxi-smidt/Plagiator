@@ -160,7 +160,7 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
       const fc = filesContent[0];
       fc["contentLength"] = fc.content.length
       fc["uploaded"] = Date.now()
-      toast("File \"" + fc.path + "\" was selected...")
+      toast("File \"" + fc.path + "\" was selected")
       setFile(fc);
       if (fc) {
         if (isFunction(dataCallback)) {

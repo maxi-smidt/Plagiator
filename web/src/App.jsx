@@ -107,7 +107,7 @@ function App() {
         toast.promise(
           window?.pywebview.api.compute_comparison(files['A'], files['B']),
           {
-            pending: 'Analyzing code...',
+            pending: 'Analyzing code',
             success: 'Analysis completed!',
             error: 'Analysis failed!'
           })

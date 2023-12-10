@@ -12,12 +12,32 @@ class API():
 
     def set_window(self,window):
         self.window = window
+
     def set_lwindow(self, lwindow):
         self.lwindow = lwindow
 
     def toggle_fullscreen(self):
-        self.lwindow.toggle_fullscreen()
+        self.window.toggle_fullscreen()
         #webview.windows[0].toggle_fullscreen()
+
+    
+    def log(self, message, level="debug"):
+        log_levels = {
+            'debug': logging.debug,
+            'info': logging.info,
+            'warning': logging.warning,
+            'error': logging.error,
+            'critical': logging.critical
+        }
+
+        log_function = log_levels.get(level.lower())
+        if log_function:
+            log_function(message)
+        else:
+            raise ValueError(f"Invalid log level: {level}")
+        
+       
+
 
     def load_web(self):
         try:
