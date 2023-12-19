@@ -35,16 +35,14 @@ class API():
             log_function(message)
         else:
             raise ValueError(f"Invalid log level: {level}")
-        
-       
-
+    
 
     def load_web(self):
         try:
             logging.info("Loading app")
             time.sleep(1.24)#this is just to show the loading animation
             self.window.show()
-            time.sleep(0.1)#this is the magic
+            time.sleep(0.2)#this is the magic is
             self.lwindow.destroy()
             #webview.windows[0].toggle_transparent = False
             #webview.windows[0].hide()
