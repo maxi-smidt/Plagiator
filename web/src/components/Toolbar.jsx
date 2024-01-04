@@ -5,95 +5,12 @@ import { useFilePicker } from 'use-file-picker';
 import { FileCodeIcon, UploadIcon, InfoIcon } from "@primer/octicons-react";
 import { isFunction } from "lodash";
 import Modal from './Modal';
-
+import LoadingAnimation from './LoadingAnim';
 
 const selectedColor = "#D7DAE0";
 const greyedColor = "#757982";
 const defaultColor = "transparent";
 const lighterColor = "#333842";
-
-const Button2 = styled.button`
-background-color: #21252B; 
-border: none;
-border-radius: 4px;
-color: #9DA5B4;
-padding: 8px 24px;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 16px;
-transition: all 50ms ease-in-out;
-&:hover {
-    background-color: #33373B; 
-}
-`;
-const Button3 = styled.button`
-  margin: 2px;
-  position: relative;
-  min-width: 11em;
-  overflow: hidden;
-  border: 0px solid #18181a;
-  color: ${greyedColor};//#9DA5B4;
-  display: inline-block;
-  font-size: 15px;
-  line-height: 15px;
-  padding: 18px 18px 17px;
-  text-decoration: none;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 2px;
-  background: #21252B;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-
-& span:first-child {
-  position: relative;
-  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 10;
-}
-
-& span:last-child {
-  color: ${selectedColor};
-  display: block;
-  position: absolute;
-  bottom: 0;
-  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 100;
-  opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform: translateY(225%) translateX(-50%);
-  height: 15px;
-  line-height: 13px;
-}
-
-&:after {
-  content: "";
-  position: absolute;
-  bottom: -50%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: ${lighterColor};
-  transform-origin: bottom center;
-  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  transform: skewY(9.3deg) scaleY(0);
-  z-index: 50;
-}
-
-&:hover:after {
-  transform-origin: bottom center;
-  transform: skewY(9.3deg) scaleY(2);
-}
-
-&:hover span:last-child {
-  transform: translateX(-50%) translateY(-50%);
-  opacity: 1;
-  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
-}
-
-`;
 
 
 const Button4 = styled.button`
@@ -149,6 +66,7 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
 
   const [file, setFile] = useState(data || "");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [showLoading, setLoading] = useState(false)
 
   useEffect(()=> {    
     setFile(data);
@@ -157,6 +75,8 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
   const { openFilePicker, filesContent, loading } = useFilePicker({
     accept: '.m',
     onFilesSuccessfullySelected: ({ plainFiles, filesContent }) => {
+      setLoading(true);
+      
       const fc = filesContent[0];
       fc["contentLength"] = fc.content.length
       fc["uploaded"] = Date.now()
@@ -164,6 +84,7 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
       setFile(fc);
       if (fc) {
         if (isFunction(dataCallback)) {
+          setLoading(false);
           dataCallback(fc, ToolbarID);
         }
       }
@@ -213,13 +134,10 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
   const ModalTableData = [["Filename", file.path], ["Modified", _getDT(file.lastModified)], ["Uploaded", _getDT(file.uploaded)], ["Size", _getTextSizeInBytes(file.content)]]
   return (
     <>
-      <MainContainer>{/* 
-            <Button3 onClick={() => openFilePicker()}>
-                <span>{getFileName()}</span>
-                <span><UploadIcon/> Load file </span>
-            </Button3> */}
+      <MainContainer>
+        {(loading || showLoading) && <LoadingAnimation/>}
         <ToolbarContainer>
-          <Button4 onClick={() => openFilePicker()}><UploadIcon /></Button4>
+          <Button4 onClick={() => {openFilePicker()} }><UploadIcon /></Button4>
           {file && <Button4 onClick={() => { setModalOpen(true) }}><InfoIcon /></Button4>}
 
 

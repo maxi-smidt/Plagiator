@@ -1,15 +1,16 @@
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import matlab from 'react-syntax-highlighter/dist/esm/languages/prism/matlab';
 import PlagiatorStyle from "./Tabs/CodeStyles/plagiatorstyle";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { isFunction } from 'lodash';
-import { logF } from '../utils/util';
+import { logF, LOG_LEVEL } from '../utils/util';
+import LoadingAnimation from './LoadingAnim';
 
 SyntaxHighlighter.registerLanguage('matlab', matlab);
 
 const CodeWrapper = styled.div`
+  position: relative;
   outline: none;
   transition: outline 200ms ease-in-out;
   display: flex;
@@ -21,9 +22,16 @@ const CodeWrapper = styled.div`
   }
 `;
 
-const CodeWindow = ({ code, highlightData, fileCallback }) => {
+
+
+
+
+const CodeWindow = ({ code, highlightData, fileCallback}) => {
 
   const [_style, setStyle] = useState({})
+  const [showLoading, setLoading] = useState(false)
+
+  const CodeWrapperRef = useRef(null)
 
   const _handleOverEnter = (e) => {
     e.preventDefault();
@@ -34,53 +42,91 @@ const CodeWindow = ({ code, highlightData, fileCallback }) => {
     setStyle(newStyle);
   }
 
+  const _isCursorOverElement = (element, x, y) => {
+    if (!element) return false;
+    let rect = element.getBoundingClientRect();
+    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+  }
+
   const _handleLeave = (e) => {
-    const newStyle = { ..._style }
+    e.preventDefault();
+    let x = e.clientX;
+    let y = e.clientY;
+
+    // Check if the cursor is over the drop target or a child element
+    if (_isCursorOverElement(CodeWrapperRef.current, x, y)) {
+      // Ignore the event if the cursor is over the drop target or a child element
+      return;
+    }
+    
+    let newStyle = { ..._style }
     newStyle["outline"] = "none";
     newStyle["borderRadius"] = "0em";
     setStyle(newStyle)
   }
 
+  function dropPromise(e) {
+    return new Promise((resolve, reject) => {
+      let fc = e.dataTransfer.files[0] || {};
+      
+      let newStyle = { ..._style };
+      const mType = fc.type;
+  
+      if (
+        mType === 'application/matlab' ||
+        mType === 'application/x-matlab-data' ||
+        fc.name.split('.').pop().toLowerCase() === 'm'
+      ) {
+        console.log(fc);
+        fc.uploaded = Date.now();
+        fc.path = fc.name;
+  
+        readFileAsync(fc)
+          .then((fileContent) => {
+            fc.content = fileContent;
+            fc.contentLength = fc.content.length;
+  
+            newStyle.borderRadius = '0em';
+            newStyle.outline = '0px solid green';
+            setStyle(newStyle);
+  
+            logF('Successfully selected file', LOG_LEVEL.INFO);
+            setLoading(false);
+            fileCallback({ ...fc });
+            resolve(); // Resolve the promise here
+          })
+          .catch((reason) => {
+            logF(reason, LOG_LEVEL.WARNING);
+            reject(reason); // Reject the promise if there is an error
+          });
+  
+        // Don't forget to remove the `return` statement here
+      } else {
+        toast.warn('Unknown file type');
+        logF('Skipping unknown file-type dropped', LOG_LEVEL.WARNING);
+  
+        newStyle.outline = '0px solid red';
+        newStyle.borderRadius = '0em';
+        setStyle(newStyle);
+  
+        setLoading(false);
+        reject(); // Reject the promise here as well
+      }
+    });
+  }
+
   const _handleDrop = async (e) => {
+    setLoading(true);
     e.preventDefault();
     let fc = e.dataTransfer.files[0] || {};
-    let newStyle = { ..._style }
-
     toast.promise(
-        async (resolve, reject) => {
-            const mType = fc.type;
-            if (mType == 'application/matlab' || mType == 'application/x-matlab-data' || fc.name.split('.').pop().toLowerCase() == "m") {
-                fc["uploaded"] = Date.now();
-                fc["path"] = fc.name;
-
-                try {
-                    const fileContent = await readFileAsync(fc);
-                    fc["content"] = fileContent;
-                    fc["contentLength"] = fc.content.length;
-                    newStyle["borderRadius"] = "0em";
-                    newStyle["outline"] = "0px solid green";
-                    setStyle(newStyle);
-                    logF("Succesfully selected file", "info")
-                    fileCallback({ ...fc });
-                } catch (error) {
-                    logF(error, "warning")
-                }
-            } else {
-                toast.warn("Unknown file type");
-                logF("Skipping unknown file-type dropped", "warning")
-                newStyle["outline"] = "0px solid red";
-                newStyle["borderRadius"] = "0em";
-                setStyle(newStyle);
-            }
-        },
-        {
+      dropPromise(e),
+      {
             pending: "File \"" + fc.name + "\" is being checked",
-            success: () => {  newStyle["borderRadius"] = "0em";
-            newStyle["outline"] = "0px solid green";
-            setStyle(newStyle);
-            return "File \"" + fc.name + "\" was selected"}
-        }
-    );
+            success:  "File \"" + fc.name + "\" was selected",
+            error: "File \"" + fc.name + "\" was rejected"
+      }
+    )
 }
 
 // Helper function for reading file content asynchronously
@@ -95,7 +141,9 @@ const readFileAsync = (file) => {
 
 
   return (
-    <CodeWrapper style={_style} onDragOver={_handleOverEnter} onDragEnter={_handleOverEnter} onDragLeave={_handleLeave} onDrop={_handleDrop}>
+    <CodeWrapper ref={CodeWrapperRef} style={_style} onDragOver={_handleOverEnter} onDragEnter={_handleOverEnter} onDragLeave={_handleLeave} onDrop={_handleDrop}>
+      
+      {showLoading && <LoadingAnimation/>}
       <SyntaxHighlighter language="matlab" style={PlagiatorStyle} lineNumberStyle={{ minWidth: "0em" }} showLineNumbers>
         {code ? code : "%Click the upload button or drop a matlab file to get started "}
       </SyntaxHighlighter>
