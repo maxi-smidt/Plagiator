@@ -42,7 +42,7 @@ class API():
             logging.info("Loading app")
             time.sleep(1.24)#this is just to show the loading animation
             self.window.show()
-            time.sleep(0.2)#this is the magic is
+            time.sleep(0)#this is the magic is
             self.lwindow.destroy()
             #webview.windows[0].toggle_transparent = False
             #webview.windows[0].hide()
