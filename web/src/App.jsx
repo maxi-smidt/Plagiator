@@ -41,6 +41,7 @@ grid-area: ${props => props.type} ;
 `;
 
 const FrameLessToolbar = styled.div`
+z-index: 100;
 user-select: none;
 grid-area: ${props => props.type} ;
 display: flex;
@@ -48,16 +49,26 @@ flex-direction: row;
 max-width: 100%;
 max-height: 1.8em;
 color: #74767a;
+transition: color 100ms ease-in-out;
+`;
+
+const ProgrammName = styled.span`
+&:hover{
+  color: #a5a9b1;
+}
 `;
 
 
+
 const ProgrammIcon = styled.img`
+z-index: 100;
 max-width: 1em;
 max-height: 1em;
 padding: 0.2em;
 `;
 
 const CloseButton = styled.button`
+    z-index: 100;
     position: absolute;
     right: 0;
     background-color: transparent;
@@ -138,7 +149,7 @@ function App() {
     <ContainerDiv>
       <FrameLessToolbar type="window">
         <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
-        <span onClick={()=>setInfoOpen(true)}>Plagiator</span>
+        <ProgrammName onClick={()=>setInfoOpen(true)}>Plagiator</ProgrammName>
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
       </FrameLessToolbar>
 
@@ -160,8 +171,8 @@ function App() {
     autoClose={3000}
     closeOnClick
     pauseOnFocusLoss={false}
-    draggable
-    pauseOnHover
+    pauseOnHover={false}
+    draggable={true}
     theme="dark"
     />
     <Modal isOpen={isInfoOpen} onClose={() => setInfoOpen(false)} 

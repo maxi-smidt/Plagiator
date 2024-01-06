@@ -16,9 +16,10 @@ pycparser==2.21
 pyinstaller==6.2.0
 pyinstaller-hooks-contrib==2023.9
 pythonnet==3.0.2
-pywebview==4.3.3
+pywebview==4.4.1
 pywin32-ctypes==0.2.2
 six==1.16.0
 soupsieve==2.5
 typing_extensions==4.8.0
 webencodings==0.5.1
+

@@ -4,7 +4,7 @@ from app.webviewUI import WebviewUI
 from app.legacyUI import LegacyUI
 
 #TODO: change
-DEFAULT_LOG_LEVEL = logging.INFO
+DEFAULT_LOG_LEVEL = logging.DEBUG
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Plagiator")
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     try:
         numeric_log_level = getattr(logging, args.log_level, None)
         if not isinstance(numeric_log_level, int):
-            raise ValueError('Invalid log level: %s' % loglevel)
+            raise ValueError('Invalid log level: %s' % args.loglevel)
     except:
         numeric_log_level = DEFAULT_LOG_LEVEL
     logging.basicConfig(format='%(asctime)s[%(levelname)s]: %(message)s',
