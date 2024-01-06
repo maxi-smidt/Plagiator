@@ -8,8 +8,9 @@ else:
 
 import logging
 
+
 class LegacyUI:
-    def read_file(file_path, text_widget):
+    def read_file(self, file_path, text_widget):
         try:
             with open(file_path, 'r') as file:
                 content = file.read()
@@ -18,28 +19,28 @@ class LegacyUI:
         except FileNotFoundError:
             text_widget.delete(1.0, tk.END)  # Clear previous content
             text_widget.insert(tk.END, "File not found!")
-    def display_result():
+
+    def display_result(self):
         result_label.config(text="Processing...")
-    
-    
+
     def browse_file1():
         global file1_path
         file1_path = filedialog.askopenfilename(filetypes=[("Matlab", "*.m")])
-        #file1_label.config(text="File 1: " + file1_path)
-        
+        # file1_label.config(text="File 1: " + file1_path)
+
     def browse_file2():
         global file2_path
         file2_path = filedialog.askopenfilename(filetypes=[("Matlab", "*.m")])
-        #file2_label.config(text="File 2: " + file2_path)
-    
+        # file2_label.config(text="File 2: " + file2_path)
+
     @staticmethod
     def run():
         if not TK_FLAG:
             logging.critical("Unable to import tkinter, likely because python was installed without tkinter.")
-            return 
+            return
         root = tk.Tk()
         root.title("Plagiator (legacy)")
-    # Create File Select Buttons
+        # Create File Select Buttons
         global file1_path
         global file2_path
 
@@ -74,7 +75,5 @@ class LegacyUI:
         process_button.pack()
 
         # Start the Tkinter main loop
-        
+
         root.mainloop()
-
-

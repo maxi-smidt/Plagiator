@@ -1,27 +1,25 @@
-import webview
-import json
 import time
-from ..plagiatscan.scan import excute_comparison
 import logging
 
+from ..scanner.moss_scanner import MossScanner
 
-class API():
 
+class API:
     def __init__(self):
         self.window = None
+        self.loading_window = None
 
-    def set_window(self,window):
+    def set_window(self, window):
         self.window = window
 
-    def set_lwindow(self, lwindow):
-        self.lwindow = lwindow
+    def set_loading_window(self, loading_window):
+        self.loading_window = loading_window
 
     def toggle_fullscreen(self):
         self.window.toggle_fullscreen()
-        #webview.windows[0].toggle_fullscreen()
 
-    
-    def log(self, message, level="debug"):
+    @classmethod
+    def log(cls, message, level="debug"):
         log_levels = {
             'debug': logging.debug,
             'info': logging.info,
@@ -35,38 +33,39 @@ class API():
             log_function(message)
         else:
             raise ValueError(f"Invalid log level: {level}")
-    
 
     def load_web(self):
         try:
             logging.info("Loading app")
-            time.sleep(1.24)#this is just to show the loading animation
+            time.sleep(1.24)  # this is just to show the loading animation
             self.window.show()
-            time.sleep(0.2)#this is the magic is
-            self.lwindow.destroy()
-            #webview.windows[0].toggle_transparent = False
-            #webview.windows[0].hide()
-            #webview.windows[0].load_url('./web/dist/index.html')
-            #time.sleep(1.5)
-            #webview.windows[0].show()
+            time.sleep(0.2)  # this is the magic is
+            self.loading_window.destroy()
+            # webview.windows[0].toggle_transparent = False # todo clean comments
+            # webview.windows[0].hide()
+            # webview.windows[0].load_url('./web/dist/index.html')
+            # time.sleep(1.5)
+            # webview.windows[0].show()
             self.window.on_top = True
-            self.window.on_top = False            
+            self.window.on_top = False
             logging.info("Switched to web")
-        except:
-            logging.critical("Could not switch to web")
-
+        except Exception as e:
+            logging.critical(f"Could not switch to web: {e}")
 
     def kill(self):
         logging.info("Received termination from web")
-        try:
-            return self.window.destroy()
-        except:
-            pass
-    
-    def health(self):
+        return self.window.destroy()
+
+    @classmethod
+    def health(cls):
         logging.info("Health Received")
 
-    def compute_comparison(self, fileL, fileR):
-        result = excute_comparison(fileL["content"], fileR["content"])
-        return result
+    @classmethod
+    def compute_comparison(cls, files):
+        files = [obj['content'] for obj in files]
+        m = MossScanner()
+        return m.compare(files)
 
+    @classmethod
+    def send_log(cls, message):
+        print(message)

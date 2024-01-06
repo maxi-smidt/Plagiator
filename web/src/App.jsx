@@ -81,6 +81,9 @@ const CloseButton = styled.button`
   
 `;
 
+function log(message) {
+    window.pywebview.api.send_log(message);
+}
 
 function App() {
 
@@ -102,10 +105,20 @@ function App() {
   
   useEffect(() => {
     if(files['A'] && files['B']){
-
+      console.log('test');
       if(isFunction(window?.pywebview?.api?.compute_comparison)){
         toast.promise(
-          window?.pywebview.api.compute_comparison(files['A'], files['B']),
+          window?.pywebview.api.compute_comparison([files['A'], files['B']]).then(
+              (result) => {
+                log(result);
+              })
+              .catch((error) => {
+                log(error);
+              })
+              .finally(() => {
+                log('Analysis process completed.');
+              }
+          ),
           {
             pending: 'Analyzing code',
             success: 'Analysis completed!',
