@@ -151,23 +151,28 @@ function App() {
       console.log('test');
       if(isFunction(window?.pywebview?.api?.compute_comparison)){
         toast.promise(
-          window?.pywebview.api.compute_comparison([files['A'], files['B']]).then(
+          new Promise((resolve, reject) => {
+           window?.pywebview.api.compute_comparison([files['A'], files['B']]).then(
               (result) => {
                 let rjson = JSON.parse(result);
-                if(rjson.error){
-                  log(rjson.error, LOG_LEVEL.ERROR)
-                }else {
+                if(rjson.error == "No match found"){
+                  setStats([{"file_index":"0","match":"0","match_history":[{"start":"0","end":"0","match":"0"}]},{"file_index":"1","match":"0","match_history":[{"start":"0","end":"0","match":"0"}]}]);
+                  log(rjson, LOG_LEVEL.DEBUG);
+                  resolve('Analysis completed successfully');
+                }else if(rjson.error == ""){
                   setStats(rjson.data);
-                  log(rjson, LOG_LEVEL.INFO);
+                  log(rjson, LOG_LEVEL.DEBUG);
+                  resolve('Analysis completed successfully');
                 }
+                else {
+                  log(rjson.error, LOG_LEVEL.ERROR)
+                  toast.error(rjson.error);
+                  setStats([]);
+                  reject('Analysis failed: ' + rjson.error);
+                }
+
               })
-              .catch((error) => {
-                log(error);
-              })
-              .finally(() => {
-                log('Analysis process completed.', LOG_LEVEL.INFO);
-              }
-          ),
+            }),
           {
             pending: 'Analyzing code',
             success: 'Analysis completed!',
