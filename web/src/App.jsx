@@ -10,7 +10,7 @@ import React from 'react';
 import "react-toastify/dist/ReactToastify.css";
 import "./components/styles/custom.css";
 import Modal from './components/Modal';
-
+import { LOG_LEVEL, log } from './utils/util';
 
 const ContainerDiv = styled.div`
 border-radius: 2em;
@@ -92,15 +92,13 @@ const CloseButton = styled.button`
   
 `;
 
-function log(message) {
-    window.pywebview.api.send_log(message);
-}
 
 function App() {
 
   const [files, setFiles] = useState({'A' : "", 'B': ""});
   const [isInfoOpen, setInfoOpen] = useState(false);
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState([]);
+  const [lineHighlights, setLineHighlights] = useState({'A' : [0, 0], 'B' : [0, 0]})
 
   const FileCallBack = (FileContent, ToolbarID) => {
     let _files = cloneDeep(files);
@@ -121,13 +119,19 @@ function App() {
         toast.promise(
           window?.pywebview.api.compute_comparison([files['A'], files['B']]).then(
               (result) => {
-                log(result);
+                let rjson = JSON.parse(result);
+                if(rjson.error){
+                  log(rjson.error, LOG_LEVEL.ERROR)
+                }else {
+                  setStats(rjson.data);
+                  log(rjson, LOG_LEVEL.INFO);
+                }
               })
               .catch((error) => {
                 log(error);
               })
               .finally(() => {
-                log('Analysis process completed.');
+                log('Analysis process completed.', LOG_LEVEL.INFO);
               }
           ),
           {
@@ -141,6 +145,21 @@ function App() {
   }, [files])
 
 
+  useEffect(()=>{
+    console.log("stats", stats)
+    if(stats.length < 2) return;
+    try{
+      let fileA = stats[0].match_history[0] //TODO: replace with more generic path I guess?  
+      let fileB = stats[1].match_history[0]
+      const newLineHighlights = {'A' : [fileA.start, fileA.end], 'B' : [fileB.start, fileB.end]}
+      setLineHighlights(cloneDeep(newLineHighlights)) 
+      console.log("hln", newLineHighlights)
+    }
+    catch(e){
+      log(e, LOG_LEVEL.WARNING);
+      setLineHighlights(cloneDeep({'A' : [0, 0], 'B' : [0, 0]}));
+    }
+  }, [stats])
 
   const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "0.30.1"]]
   return (
@@ -149,7 +168,7 @@ function App() {
     <ContainerDiv>
       <FrameLessToolbar type="window">
         <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
-        <ProgrammName onClick={()=>setInfoOpen(true)}>Plagiator</ProgrammName>
+        <ProgrammName onClick={()=>setInfoOpen(true)}>Plagiator {/*new Date().toLocaleString()*/}</ProgrammName>
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
       </FrameLessToolbar>
 
@@ -160,8 +179,20 @@ function App() {
       <GridDiv type="Tool-B">
         <Toolbar data={files['B']} dataCallback={(FileContent, ToolbarID) => FileCallBack(FileContent, ToolbarID)} ToolbarID={'B'}/>
       </GridDiv>
-        <CodeWindow fileCallback={(FileContent) => FileCallBack(FileContent, 'A')} gridArea="Code-A" fileName={files['A']?.path || ""} code={files['A']?.content || ""}/>
-        <CodeWindow fileCallback={(FileContent) => FileCallBack(FileContent, 'B')} gridArea="Code-B" fileName={files['B']?.path || ""} code={files['B']?.content || ""}/>
+        <CodeWindow 
+        gridArea="Code-A" 
+        fileCallback={(FileContent) => FileCallBack(FileContent, 'A')} 
+        fileName={files['A']?.path || ""} 
+        code={files['A']?.content || ""}
+        lines={lineHighlights.A}
+        />
+        <CodeWindow 
+        gridArea="Code-B" 
+        fileCallback={(FileContent) => FileCallBack(FileContent, 'B')} 
+        fileName={files['B']?.path || ""} 
+        code={files['B']?.content || ""}
+        lines={lineHighlights.B}
+        />
       <GridDiv type="output">
         <Stats stats={stats}/>
       </GridDiv>

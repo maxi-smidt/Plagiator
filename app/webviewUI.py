@@ -33,6 +33,7 @@ class WebviewUI:
                                         )
         api.set_window(window)
         api.set_loading_window(loading)
+        api.set_debug(debug)
         # window.transparent = True # todo clean comments
         # print(dir(window))
         # print(vars(window))

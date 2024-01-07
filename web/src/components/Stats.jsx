@@ -1,4 +1,4 @@
-import { CheckCircleIcon, GoalIcon, GraphIcon, XCircleIcon } from "@primer/octicons-react";
+import { CheckCircleIcon, GoalIcon, GraphIcon, XCircleIcon, RocketIcon } from "@primer/octicons-react";
 import Tab, { TabItem } from "./Tabs";
 import React from "react";
 import styled from "styled-components";
@@ -97,59 +97,81 @@ const FailedCard = styled.div`
 
 
 
-const Stats = ({stats}) => {
-    let _stats = stats
+const Stats = ({ stats }) => {
+  let _stats = stats
 
-    if(isEmpty(stats)){
-        _stats = {passed: true, similarity: 0.43, timestamp: Date.now()}
-    }
-    
-    const RenderTab = (index) => {
-        switch(index){
-            case 0:
-                return (
-                    <ResultPage>
-                       
-                        <h3>
-                            {_stats.passed ?
-                            <span><CheckCircleIcon size={24}/> The scripts are likely original works. </span>
-                             : 
-                            <span><XCircleIcon size={24}/> One of the scripts seems to be a plagiarism.</span>}    
-                        </h3>
-                        <p style={{marginBottom:"0px", marginTop: "0px"}}>The files are {_stats.similarity*100}% similar</p>
-                        
-                        <PassedCard/>
-                    </ResultPage>
-                );
-            case 1:
-            case 2:
-            default:
-                return (
-                    <>
-                    Seite 2
-                    </>
-                )
-    
-        }
-    
-    
-    }
-    const [selectedTab, setSelectedTab] = useState(0)
 
-    const onTabSelected = (index) => {
-        setSelectedTab(index)
-      };
-    
+  const _getDashboard = () => {
+    let a_match = stats[0].match;
+    let b_match = stats[1].match;
+    let max_match = Math.max(a_match, b_match);
+    let avg_match =  Math.round((a_match * b_match) /2);
+
+    let failed = (max_match > 50 || avg_match > 50)
     return (
-      <StatsContainer>
-        <Tab onTabSelected={onTabSelected}>
-            <TabItem><GoalIcon/> Result</TabItem>
-            <TabItem><GraphIcon/> Statistics</TabItem>
-            <TabItem disabled>In depth</TabItem>
-        </Tab>
-        {RenderTab(selectedTab)}
-      </StatsContainer>
-    );
+      <>
+                  <h3>
+                    {failed ?
+                      <span><XCircleIcon size={24} /> One of the scripts seems to be a plagiarism.</span>
+                      :
+                      <span><CheckCircleIcon size={24} /> The scripts are likely original works. </span>
+                      }
+                  </h3>
+                  <p style={{ marginBottom: "0px", marginTop: "0px" }}>The files are up to {max_match}% similar.</p>
+    </>
+    )
+  } 
+
+  //match calculation?
+
+
+  const RenderTab = (index) => {
+    switch (index) {
+      case 0:
+        return (
+          <ResultPage>
+            {isEmpty(_stats) && 
+                <>
+                <h3><span><RocketIcon size={24}/> Welcome to Plagiator</span></h3>
+                <p style={{ marginBottom: "0px", marginTop: "0px" }}>Upload matlab scripts to get started. You can use either drag n' drop or the upload button to browse this computer for files. </p>
+                </>
+              
+            }
+
+            {!isEmpty(_stats) &&_getDashboard()}
+
+            <PassedCard />
+          </ResultPage>
+        );
+      case 1:
+      case 2:
+      default:
+        return (
+          <>
+            Seite 2
+          </>
+        )
+
+    }
+
+
+  }
+  const [selectedTab, setSelectedTab] = useState(0)
+
+  const onTabSelected = (index) => {
+    setSelectedTab(index)
+  };
+
+  return (
+    <StatsContainer>
+      <Tab onTabSelected={onTabSelected}>
+        <TabItem><GoalIcon /> Result</TabItem>
+        <TabItem><GraphIcon /> Statistics</TabItem>
+        <TabItem disabled>In depth</TabItem>
+      </Tab>
+      {RenderTab(selectedTab)}
+    </StatsContainer>
+  );
 };
 
 

@@ -1,5 +1,14 @@
 import {isFunction} from "lodash"
 
+const WEB_DEBUG = false;
+
+
+export const DEBUG_MODE = () => {
+    return (isFunction(window?.pywebview?.api?.is_debug)) ? window.pywebview.api.is_debug() : WEB_DEBUG;
+}
+
+
+
 export const LOG_LEVEL = Object.freeze({
 	DEBUG: Symbol("debug"),
     INFO: Symbol("info"),
@@ -8,7 +17,7 @@ export const LOG_LEVEL = Object.freeze({
 	CRITICAL: Symbol("critical")
 })
 
-export function logF(message,level=LOG_LEVEL.INFO){
+export function log(message,level=LOG_LEVEL.INFO){
     if (isFunction(window?.pywebview?.api?.log)) {
         window.pywebview.api.log(message, level);
     }

@@ -4,7 +4,7 @@ import PlagiatorStyle from "./Tabs/CodeStyles/plagiatorstyle";
 import React, { useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { logF, LOG_LEVEL } from '../utils/util';
+import { log, LOG_LEVEL } from '../utils/util';
 import LoadingAnimation from './LoadingAnim';
 
 SyntaxHighlighter.registerLanguage('matlab', matlab);
@@ -26,7 +26,7 @@ const CodeWrapper = styled.div`
 
 
 
-const CodeWindow = ({ code, highlightData, fileCallback}) => {
+const CodeWindow = ({ code, lines, fileCallback}) => {
 
   const [_style, setStyle] = useState({})
   const [showLoading, setLoading] = useState(false)
@@ -77,7 +77,6 @@ const CodeWindow = ({ code, highlightData, fileCallback}) => {
         mType === 'application/x-matlab-data' ||
         fc.name.split('.').pop().toLowerCase() === 'm'
       ) {
-        console.log(fc);
         fc.uploaded = Date.now();
         fc.path = fc.name;
   
@@ -90,20 +89,20 @@ const CodeWindow = ({ code, highlightData, fileCallback}) => {
             newStyle.outline = '0px solid green';
             setStyle(newStyle);
   
-            logF('Successfully selected file', LOG_LEVEL.INFO);
+            log('Successfully selected file', LOG_LEVEL.INFO);
             setLoading(false);
             fileCallback({ ...fc });
             resolve(); // Resolve the promise here
           })
           .catch((reason) => {
-            logF(reason, LOG_LEVEL.WARNING);
+            log(reason, LOG_LEVEL.WARNING);
             reject(reason); // Reject the promise if there is an error
           });
   
         // Don't forget to remove the `return` statement here
       } else {
         toast.warn('Unknown file type');
-        logF('Skipping unknown file-type dropped', LOG_LEVEL.WARNING);
+        log('Skipping unknown file-type dropped', LOG_LEVEL.WARNING);
   
         newStyle.outline = '0px solid red';
         newStyle.borderRadius = '0em';
@@ -139,12 +138,21 @@ const readFileAsync = (file) => {
     });
 };
 
+const _getLineStyles = (lineNumber) => {
+    const style = { display: "block", width: "fit-content" };
+    if (lines[0] <= lineNumber && lines[1] >= lineNumber) {
+      style.backgroundColor = "#fc1d005a";
+    }
+    return { style };
+}
 
   return (
     <CodeWrapper ref={CodeWrapperRef} style={_style} onDragOver={_handleOverEnter} onDragEnter={_handleOverEnter} onDragLeave={_handleLeave} onDrop={_handleDrop}>
       
       {showLoading && <LoadingAnimation/>}
-      <SyntaxHighlighter language="matlab" style={PlagiatorStyle} lineNumberStyle={{ minWidth: "0em" }} showLineNumbers>
+      <SyntaxHighlighter language="matlab" style={PlagiatorStyle} lineNumberStyle={{ minWidth: "0em" }} showLineNumbers={true} wrapLines={true}
+      lineProps={(lineNumber) => _getLineStyles(lineNumber)}
+      >
         {code ? code : "%Click the upload button or drop a matlab file to get started "}
       </SyntaxHighlighter>
     </CodeWrapper>

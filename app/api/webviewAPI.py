@@ -8,6 +8,7 @@ class API:
     def __init__(self):
         self.window = None
         self.loading_window = None
+        self.is_debug = False
 
     def set_window(self, window):
         self.window = window
@@ -17,6 +18,12 @@ class API:
 
     def toggle_fullscreen(self):
         self.window.toggle_fullscreen()
+    
+    def set_debug(self, debug):
+        self.is_debug = debug
+
+    def is_debug(self):
+        return self.is_debug
 
     @classmethod
     def log(cls, message, level="debug"):
