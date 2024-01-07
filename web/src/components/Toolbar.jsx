@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components"
 import { toast } from 'react-toastify';
 import { useFilePicker } from 'use-file-picker';
-import { FileCodeIcon, UploadIcon, InfoIcon } from "@primer/octicons-react";
+import { FileCodeIcon, UploadIcon, InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { isFunction } from "lodash";
 import Modal from './Modal';
 import LoadingAnimation from './LoadingAnim';
@@ -139,7 +139,7 @@ const Toolbar = ({data, dataCallback, ToolbarID }) => {
         <ToolbarContainer>
           <Button4 onClick={() => {openFilePicker()} }><UploadIcon /></Button4>
           {file && <Button4 onClick={() => { setModalOpen(true) }}><InfoIcon /></Button4>}
-
+          {file && <Button4 onClick={() => dataCallback("", ToolbarID)}><TrashIcon /></Button4>}
 
         </ToolbarContainer>
 

@@ -18,13 +18,14 @@ if __name__ == '__main__':
     parser.add_argument("--debug", "-d", action='store_true', help="Enable development mode in webview.")
     
     args = parser.parse_args()
+
+    numeric_log_level = DEFAULT_LOG_LEVEL
     try:
         numeric_log_level = getattr(logging, args.log_level, None)
         if not isinstance(numeric_log_level, int):
             raise ValueError('Invalid log level: %s' % args.loglevel)
     except:
-        numeric_log_level = DEFAULT_LOG_LEVEL
-    logging.basicConfig(format='%(asctime)s[%(levelname)s]: %(message)s',
+        logging.basicConfig(format='%(asctime)s[%(levelname)s]: %(message)s',
                         filename='plagiator.log',
                         level=numeric_log_level,
                         datefmt='%Y-%m-%d %H:%M:%S',

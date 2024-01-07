@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import CodeWindow from './components/CodeWindow';
 import Toolbar from './components/Toolbar';
-import { XIcon } from '@primer/octicons-react';
+import { XIcon, DashIcon  } from '@primer/octicons-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { cloneDeep, isFunction } from 'lodash';
@@ -17,7 +17,7 @@ border-radius: 2em;
 display: grid; 
 grid-auto-flow: row dense; 
 grid-template-columns: 1fr 1fr; 
-grid-template-rows: 1.4em 0.1fr 2.3fr 0.6fr; 
+grid-template-rows: 1.4em 0.1fr 2.3fr 0.1fr; 
 gap: 0px 4px; 
 grid-template-areas: 
   "window window"
@@ -50,6 +50,7 @@ max-width: 100%;
 max-height: 1.8em;
 color: #74767a;
 transition: color 100ms ease-in-out;
+overflow:hidden;
 `;
 
 const ProgrammName = styled.span`
@@ -73,6 +74,31 @@ const CloseButton = styled.button`
     right: 0;
     background-color: transparent;
     border: none;
+    //border-bottom-left-radius: 0.2em;
+    //border-radius: 0.3em;
+    user-select: none;
+    color: white;
+    padding: 0.05em 0.4em 0.1em 0.4em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    width: 1.75em;
+    height: 1.25em;
+    transition: 0.2s ease-in-out;
+
+  &:hover{
+    background-color: #E22A27; 
+  }
+  
+`;
+
+const MinimizeButton = styled.button`
+    z-index: 100;
+    position: absolute;
+    right: 1.75em;
+    background-color: transparent;
+    border: none;
     border-bottom-left-radius: 0.2em;
     //border-radius: 0.3em;
     user-select: none;
@@ -87,10 +113,12 @@ const CloseButton = styled.button`
     transition: 0.2s ease-in-out;
 
   &:hover{
-    background-color: #E22A27; 
+    background-color: #74767a; 
   }
   
 `;
+
+
 
 
 function App() {
@@ -109,6 +137,12 @@ function App() {
   const _closeWindow = () => {
     if(isFunction(window?.pywebview?.api?.kill)){
       window.pywebview.api.kill();
+    }
+  }
+
+  const _minimizeWindow = () => {
+    if(isFunction(window?.pywebview?.api?.minimize)){
+      window.pywebview.api.minimize();
     }
   }
   
@@ -161,7 +195,7 @@ function App() {
     }
   }, [stats])
 
-  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "0.30.1"]]
+  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "1.0-Beta"]]
   return (
     <>
 
@@ -169,6 +203,7 @@ function App() {
       <FrameLessToolbar type="window">
         <ProgrammIcon onClick={()=>setInfoOpen(true)} src="/favicon.ico" />
         <ProgrammName onClick={()=>setInfoOpen(true)}>Plagiator {/*new Date().toLocaleString()*/}</ProgrammName>
+        <MinimizeButton onClick={() => _minimizeWindow()}><DashIcon/></MinimizeButton>
         <CloseButton onClick={() => _closeWindow()}><XIcon/></CloseButton>
       </FrameLessToolbar>
 
@@ -193,9 +228,7 @@ function App() {
         code={files['B']?.content || ""}
         lines={lineHighlights.B}
         />
-      <GridDiv type="output">
-        <Stats stats={stats}/>
-      </GridDiv>
+      <Stats type="output" stats={stats} files={files}/>
     </ContainerDiv>
     <ToastContainer 
     position="bottom-right"

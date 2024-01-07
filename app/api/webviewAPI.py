@@ -19,6 +19,9 @@ class API:
     def toggle_fullscreen(self):
         self.window.toggle_fullscreen()
     
+    def minimize(self):
+        self.window.minimize()
+
     def set_debug(self, debug):
         self.is_debug = debug
 

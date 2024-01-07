@@ -12,6 +12,7 @@ const StatsContainer = styled.div`
     align-items: start;
     justify-content: left;
     width: 100%;
+    grid-area: ${props => props.type} ;
 `;
 
 
@@ -20,6 +21,11 @@ const ResultPage = styled.div`
     display: flex;
     flex-direction: column;
     margin-left: 10px;
+`;
+
+const Paragraph = styled.p`
+  margin-bottom: 0px;
+  margin-top: 0px;
 `;
 
 const PassedCard = styled.div`
@@ -61,7 +67,6 @@ const PassedCard = styled.div`
 `;
 
 
-
 const FailedCard = styled.div`
   display: inline-block;
   position: relative;
@@ -97,8 +102,7 @@ const FailedCard = styled.div`
 
 
 
-const Stats = ({ stats }) => {
-  let _stats = stats
+const Stats = ({ stats, files, type }) => {
 
 
   const _getDashboard = () => {
@@ -117,7 +121,7 @@ const Stats = ({ stats }) => {
                       <span><CheckCircleIcon size={24} /> The scripts are likely original works. </span>
                       }
                   </h3>
-                  <p style={{ marginBottom: "0px", marginTop: "0px" }}>The files are up to {max_match}% similar.</p>
+                  <Paragraph>The files are up to {max_match}% similar.</Paragraph>
     </>
     )
   } 
@@ -130,26 +134,27 @@ const Stats = ({ stats }) => {
       case 0:
         return (
           <ResultPage>
-            {isEmpty(_stats) && 
+            {isEmpty(stats) && 
                 <>
                 <h3><span><RocketIcon size={24}/> Welcome to Plagiator</span></h3>
-                <p style={{ marginBottom: "0px", marginTop: "0px" }}>Upload matlab scripts to get started. You can use either drag n' drop or the upload button to browse this computer for files. </p>
+                <Paragraph>Upload matlab scripts to get started. You can use either drag n' drop or the upload button to browse this computer for files. </Paragraph>
                 </>
               
             }
 
-            {!isEmpty(_stats) &&_getDashboard()}
-
-            <PassedCard />
+            {!isEmpty(stats) &&_getDashboard()}
           </ResultPage>
         );
       case 1:
       case 2:
       default:
         return (
-          <>
-            Seite 2
-          </>
+          <ResultPage>
+            <h3>Statistics</h3>
+            <Paragraph>
+                <i>MOSS</i> reports a match of {stats[0].match}% for file "{files["A"].path}" and a match of {stats[1].match}% for file "{files["B"].path}". 
+            </Paragraph>
+         </ResultPage>
         )
 
     }
@@ -163,10 +168,10 @@ const Stats = ({ stats }) => {
   };
 
   return (
-    <StatsContainer>
+    <StatsContainer type={type}>
       <Tab onTabSelected={onTabSelected}>
         <TabItem><GoalIcon /> Result</TabItem>
-        <TabItem><GraphIcon /> Statistics</TabItem>
+        <TabItem disabled={isEmpty(stats)}><GraphIcon /> Statistics</TabItem>
         <TabItem disabled>In depth</TabItem>
       </Tab>
       {RenderTab(selectedTab)}

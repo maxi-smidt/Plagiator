@@ -20,13 +20,14 @@ class WebviewUI:
                                        draggable=True,
                                        frameless=True)
 
-        with open(os.path.join(os.path.dirname(__file__), 'loading_screen/loading_screen.html'), 'r') as html:
+        with open(os.path.join(os.path.dirname(__file__), './loading_screen/loading_screen.html'), 'r') as html:
             loading_html = html.read()
 
         loading = webview.create_window('PlagiatorLoading',
                                         html=loading_html,
                                         min_size=(1000, 600),
                                         background_color='#21252B',
+                                        #transparent=True,
                                         on_top=True,
                                         frameless=True,
                                         easy_drag=False
