@@ -61,18 +61,19 @@ class MossScanner:
         :param files: a list of files as strings to compare
         :return: parsed json data
         """
-        error = ''
+        error: str = ''
         data = []
         paths = self.__setup(files)
         moss = self.__get_moss(paths)
         try:
             url = moss.send()
+            print(url)
             soup = self.__get_soup_from_url(url + '/' + self.__TARGET_FILE)
             data = self.__parse_soup(soup)
         except HTTPError:
             error = self.__NO_MATCH_FOUND_ERROR
         except Exception as e:
-            error = e
+            error = str(e)
 
         return json.dumps({
             'error': error,
