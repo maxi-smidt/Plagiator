@@ -1,10 +1,30 @@
 import logging
 import argparse
+import threading
+import sqlite3
+import subprocess
+import os
 from app.webviewUI import WebviewUI
 from app.legacyUI import LegacyUI
+from database import ddl
 
-#TODO: change
+
+#  TODO: change
 DEFAULT_LOG_LEVEL = logging.DEBUG
+
+
+def init_database():
+    db_path = 'database/.plagiator.db'
+    conn = sqlite3.connect(db_path)
+    if os.name == 'nt':  # Check if the operating system is Windows
+        subprocess.call(['attrib', '+H', db_path])
+    cur = conn.cursor()
+    cur.execute(ddl.CREATE_TABLE_FILE)
+    cur.execute(ddl.CREATE_TABLE_COMPARISON)
+    cur.close()
+    conn.commit()
+    conn.close()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Plagiator")
@@ -30,10 +50,13 @@ if __name__ == '__main__':
                         level=numeric_log_level,
                         datefmt='%Y-%m-%d %H:%M:%S',
                         filemode='w')
-    
+
+    database_thread = threading.Thread(target=init_database)
+
     if args.nogui:
         logging.info("CLI mode")
     else:
+        database_thread.start()
         if args.gui == 'web':
             logging.info("Web mode")
             useDebug = args.debug
@@ -44,6 +67,6 @@ if __name__ == '__main__':
                             "execution and restart without the '--gui legacy' flag. If you did this on purpose: Maybe "
                             "take a step back and see where your life is heading. Maybe something is seriously wrong "
                             "with you. I don't know, I'm just a silly programm. But still. Just making sure buddy.")
-            LegacyUI.run()
-    
+            LegacyUI().run()
+        database_thread.join()
     logging.info("Programm terminated\n")
