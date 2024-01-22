@@ -7,7 +7,7 @@ class WebviewUI:
 
     @staticmethod
     def init(debug):
-        api = API()
+        api = API(debug)
 
         window = webview.create_window('Plagiator',
                                        './web/dist/index.html',
@@ -34,7 +34,6 @@ class WebviewUI:
                                         )
         api.set_window(window)
         api.set_loading_window(loading)
-        api.set_debug(debug)
         # window.transparent = True # todo clean comments
         # print(dir(window))
         # print(vars(window))

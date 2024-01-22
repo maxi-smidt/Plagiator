@@ -6,10 +6,10 @@ from database.database_manager import DatabaseManager as dbm
 
 
 class API:
-    def __init__(self):
+    def __init__(self, debug):
         self.window = None
         self.loading_window = None
-        self.is_debug = False
+        self.debug = debug
 
     def set_window(self, window):
         self.window = window
@@ -22,12 +22,6 @@ class API:
     
     def minimize(self):
         self.window.minimize()
-
-    def set_debug(self, debug):
-        self.is_debug = debug
-
-    def is_debug(self):
-        return self.is_debug
 
     @classmethod
     def log(cls, message, level="debug"):
@@ -88,3 +82,19 @@ class API:
     @classmethod
     def send_log(cls, message):
         print(message)
+
+    def get_log(self):
+        if not self.debug:
+            return
+        with open('plagiator.log', 'r') as file:
+            return [self.__parse_log_line(line) for line in file.readlines()]
+
+    @staticmethod
+    def __parse_log_line(line):
+        split = line.split('[')
+        time_stamp = split[0]
+        split = split[1].split(']')
+        severity = split[0]
+        message = split[1].replace(": ", "", 1).strip()
+        return {'time_stamp': time_stamp, 'severity': severity, 'message': message}
+
