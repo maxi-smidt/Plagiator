@@ -168,6 +168,7 @@ function App() {
                   log(rjson.error, LOG_LEVEL.ERROR)
                   toast.error(rjson.error);
                   setStats([]);
+                  
                   reject('Analysis failed: ' + rjson.error);
                 }
 
@@ -180,13 +181,18 @@ function App() {
           })
       }
       //setStats()
+    }else {
+      setStats([])
     }
   }, [files])
 
 
   useEffect(()=>{
     console.log("stats", stats)
-    if(stats.length < 2) return;
+    if(stats.length < 2) {
+      setLineHighlights(cloneDeep({'A' : [0, 0], 'B' : [0, 0]}))
+      return;
+    }
     try{
       let fileA = stats[0].match_history[0] //TODO: replace with more generic path I guess?  
       let fileB = stats[1].match_history[0]
@@ -200,7 +206,7 @@ function App() {
     }
   }, [stats])
 
-  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "1.0-Beta"]]
+  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "1.2-Beta"]]
   return (
     <>
 

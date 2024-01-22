@@ -1,9 +1,11 @@
-import { CheckCircleIcon, GoalIcon, GraphIcon, XCircleIcon, RocketIcon } from "@primer/octicons-react";
+import { CheckCircleIcon, GoalIcon, GraphIcon, XCircleIcon, RocketIcon, VersionsIcon } from "@primer/octicons-react";
 import Tab, { TabItem } from "./Tabs";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useState } from "react";
-import { isEmpty } from "lodash";
+import { isEmpty, isFunction } from "lodash";
+import HistoryElement from "./HistoryElement";
+
 
 const StatsContainer = styled.div`
     display: flex;
@@ -14,8 +16,6 @@ const StatsContainer = styled.div`
     width: 100%;
     grid-area: ${props => props.type} ;
 `;
-
-
 
 const ResultPage = styled.div`
     display: flex;
@@ -28,135 +28,101 @@ const Paragraph = styled.p`
   margin-top: 0px;
 `;
 
-const PassedCard = styled.div`
- display: inline-block;
-  position: relative;
-  border: $line-width solid currentColor;
-  border-radius: 50%;
-  font-size: 0.4px;
-  width: 50em;
-  height: 50em;
-  color: #8fcf8f;
-  transform: rotate(40deg);
-  
-  &::before,
-  &::after {
-    content: '';
-    background-color: currentColor;
-    position: absolute;
-    width: $line-width;
-    border-radius: 3px;
-  }
-  
-  &::before {
-    height: 33em;
-    left: 50%;
-    top: 50%;
-    margin-left: 2em;
-    margin-top: -18em;
-  }
-  
-  &::after {
-    height: 15em;
-    transform: rotate(90deg);
-    top: 50%;
-    left: 50%;
-    margin-top: 5em;
-    margin-left: -6em;
-  }
+const HistoryWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: start;
+  padding: 0.25em 0.25em 0em 0.25em ;
+  overflow: scroll auto;
+  scrollbar-gutter: stable;
+  height: 100%;
 `;
 
+export const has_failed = (a, b) => {
+  const max_match = Math.max(a, b);
+  const avg_match = Math.round((a * b) / 2);
+  return (max_match > 50 || avg_match > 50)
+}
 
-const FailedCard = styled.div`
-  display: inline-block;
-  position: relative;
-  border: $line-width solid currentColor;
-  border-radius: 50%;
-  font-size: 0.4px;
-  width: 50em;
-  height: 50em;
-  color: #e27d7a;
-  
-  &::before,
-  &::after{
-    content: '';
-    width: $line-width;
-    height: 34em;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-top: -17em;
-    margin-left: -2em;
-    background-color: currentColor;
-    border-radius: 3px;
+const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
+
+
+  const [history, setHistory] = useState([]);
+
+
+
+  const _getHistory = () => {
+    if (isFunction(window?.pywebview?.api?.get_history)) {
+      window.pywebview.api.get_history().then(
+        (result) => {
+          setHistory(result);
+        }
+      );
+    }
   }
+
+  useEffect(()=> {
+    setHistory(_getHistory());
+  },[stats])
+
   
-  &::before {
-    transform: rotate(45deg);
-  }
-  
-  &::after {
-    transform: rotate(-45deg);
-  }
-`;
-
-
-
-const Stats = ({ stats, files, type }) => {
-
 
   const _getDashboard = () => {
-    let a_match = stats[0].match;
-    let b_match = stats[1].match;
-    let max_match = Math.max(a_match, b_match);
-    let avg_match =  Math.round((a_match * b_match) /2);
-
-    let failed = (max_match > 50 || avg_match > 50)
+    const a_match = stats[0].match;
+    const b_match = stats[1].match;
+    const failed = has_failed(a_match, b_match);
     return (
       <>
-                  <h3>
-                    {failed ?
-                      <span><XCircleIcon size={24} /> One of the scripts seems to be a plagiarism.</span>
-                      :
-                      <span><CheckCircleIcon size={24} /> The scripts are likely original works. </span>
-                      }
-                  </h3>
-                  <Paragraph>The files are up to {max_match}% similar.</Paragraph>
-    </>
+        <h3>
+          {failed ?
+            <span><XCircleIcon size={24} /> One of the scripts seems to be a plagiarism.</span>
+            :
+            <span><CheckCircleIcon size={24} /> The scripts are likely original works. </span>
+          }
+        </h3>
+        <Paragraph>The files are up to {max_match}% similar.</Paragraph>
+      </>
     )
-  } 
+  }
 
   //match calculation?
 
 
   const RenderTab = (index) => {
     switch (index) {
+      default:
       case 0:
         return (
           <ResultPage>
-            {isEmpty(stats) && 
-                <>
-                <h3><span><RocketIcon size={24}/> Welcome to Plagiator</span></h3>
+            {isEmpty(stats) &&
+              <>
+                <h3><span><RocketIcon size={24} /> Welcome to Plagiator</span></h3>
                 <Paragraph>Upload matlab scripts to get started. You can use either drag n' drop or the upload button to browse this computer for files. </Paragraph>
-                </>
-              
+              </>
+
             }
 
-            {!isEmpty(stats) &&_getDashboard()}
+            {!isEmpty(stats) && _getDashboard()}
           </ResultPage>
         );
       case 1:
-      case 2:
-      default:
         return (
           <ResultPage>
             <h3>Statistics</h3>
             <Paragraph>
-                <i>MOSS</i> reports a match of {stats[0].match}% for file "{files["A"].path}" and a match of {stats[1].match}% for file "{files["B"].path}". 
+              <i>MOSS</i> reports a match of {stats[0].match}% for file "{files["A"].path}" and a match of {stats[1].match}% for file "{files["B"].path}".
             </Paragraph>
-         </ResultPage>
+          </ResultPage>
         )
-
+      case 2:
+        return (
+          <HistoryWrapper>
+           {history.map(element => {
+            return <HistoryElement {...element} key={element.time_stamp}/>
+           })}
+          </HistoryWrapper>
+        )
     }
 
 
@@ -172,7 +138,7 @@ const Stats = ({ stats, files, type }) => {
       <Tab onTabSelected={onTabSelected}>
         <TabItem><GoalIcon /> Result</TabItem>
         <TabItem disabled={isEmpty(stats)}><GraphIcon /> Statistics</TabItem>
-        <TabItem disabled>In depth</TabItem>
+        <TabItem disabled={false}><VersionsIcon /> History</TabItem>
       </Tab>
       {RenderTab(selectedTab)}
     </StatsContainer>

@@ -4,9 +4,9 @@ export const TabContainer = styled.div`
   display: flex;
   width: fit-content;
   background: transparent;
-  align-items: left;
+  justify-content: left;
   flex-direction: column;
-  flex-wrap: no-wrap;
+  flex-wrap: nowrap;
 `;
 
 const selectedColor = "#D7DAE0";

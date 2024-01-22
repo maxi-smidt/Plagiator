@@ -5,7 +5,7 @@ from app.webviewUI import WebviewUI
 from app.legacyUI import LegacyUI
 from database.database_manager import DatabaseManager as dbm
 
-DEFAULT_LOG_LEVEL = logging.DEBUG
+DEFAULT_LOG_LEVEL = logging.INFO
 
 
 def get_numeric_log_level(level):
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         database_thread.start()
         if args.gui == 'web':
             logging.info("Web mode")
-            useDebug = True if numeric_log_level == logging.DEBUG else False
+            useDebug = True if numeric_log_level == logging.DEBUG else args.debug
             WebviewUI.init(debug=useDebug)
         else:
             logging.info("Legacy mode")
