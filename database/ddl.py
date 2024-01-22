@@ -10,6 +10,6 @@ CREATE_TABLE_COMPARISON = """
         file_1 REFERENCES files(name),
         file_2 REFERENCES files(name),
         result TEXT NOT NULL,
-        time_stamp TIMESTAMP NOT NULL
+        time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 """

@@ -1,29 +1,13 @@
 import logging
 import argparse
 import threading
-import sqlite3
-import subprocess
-import os
 from app.webviewUI import WebviewUI
 from app.legacyUI import LegacyUI
-from database import ddl
+from database.database_manager import DatabaseManager as dbm
 
 
 #  TODO: change
 DEFAULT_LOG_LEVEL = logging.DEBUG
-
-
-def init_database():
-    db_path = 'database/.plagiator.db'
-    conn = sqlite3.connect(db_path)
-    if os.name == 'nt':  # Check if the operating system is Windows
-        subprocess.call(['attrib', '+H', db_path])
-    cur = conn.cursor()
-    cur.execute(ddl.CREATE_TABLE_FILE)
-    cur.execute(ddl.CREATE_TABLE_COMPARISON)
-    cur.close()
-    conn.commit()
-    conn.close()
 
 
 if __name__ == '__main__':
@@ -51,7 +35,7 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S',
                         filemode='w')
 
-    database_thread = threading.Thread(target=init_database)
+    database_thread = threading.Thread(target=dbm.init)
 
     if args.nogui:
         logging.info("CLI mode")

@@ -2,6 +2,7 @@ import time
 import logging
 
 from ..scanner.moss_scanner import MossScanner
+from database.database_manager import DatabaseManager as dbm
 
 
 class API:
@@ -72,9 +73,17 @@ class API:
 
     @classmethod
     def compute_comparison(cls, files):
-        files = [obj['content'] for obj in files]
-        m = MossScanner()
-        return m.compare(files)
+        file_1, file_2 = files
+        # m = MossScanner()
+        # result = m.compare([file_1['content'], file_2['content']]) TODO activate moss again
+        result = '{"error": "", "data": [{"file_index": "0", "match": "95", "match_history": [{"start": "1", "end": "14", "match": "95"}]}, {"file_index": "1", "match": "95", "match_history": [{"start": "1", "end": "11", "match": "95"}]}]}'
+        dbm.insert_into_comparison({'name': file_1['path'], 'content': file_1['content']},
+                                   {'name': file_2['path'], 'content': file_2['content']}, result)
+        return result
+
+    @classmethod
+    def get_history(cls):
+        return dbm.get_history()
 
     @classmethod
     def send_log(cls, message):
