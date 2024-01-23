@@ -28,7 +28,7 @@ class WebviewUI:
                                         html=loading_html,
                                         min_size=(1000, 600),
                                         background_color='#21252B',
-                                        #transparent=True,
+                                        transparent=False,
                                         on_top=True,
                                         frameless=True,
                                         easy_drag=False
