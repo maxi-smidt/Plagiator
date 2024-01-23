@@ -1,5 +1,6 @@
 import time
 import logging
+import re
 
 from ..scanner.moss_scanner import MossScanner
 from database.database_manager import DatabaseManager as dbm
@@ -46,11 +47,6 @@ class API:
             self.window.show()
             time.sleep(0.2)  # this is the magic is
             self.loading_window.destroy()
-            # webview.windows[0].toggle_transparent = False # todo clean comments
-            # webview.windows[0].hide()
-            # webview.windows[0].load_url('./web/dist/index.html')
-            # time.sleep(1.5)
-            # webview.windows[0].show()
             self.window.on_top = True
             self.window.on_top = False
             logging.info("Switched to web")
@@ -68,19 +64,14 @@ class API:
     @classmethod
     def compute_comparison(cls, files):
         file_1, file_2 = files
-        # m = MossScanner()
-        # result = m.compare([file_1['content'], file_2['content']]) TODO activate moss again
-        result = '{"error": "", "data": [{"file_index": "0", "match": "95", "match_history": [{"start": "1", "end": "14", "match": "95"}]}, {"file_index": "1", "match": "95", "match_history": [{"start": "1", "end": "11", "match": "95"}]}]}'
+        m = MossScanner()
+        result = m.compare([file_1['content'], file_2['content']])
         dbm.insert_into_comparison(file_1, file_2, result)
         return result
 
     @classmethod
     def get_history(cls):
         return dbm.get_history()
-
-    @classmethod
-    def send_log(cls, message):
-        print(message)
 
     def get_log(self):
         if not self.debug:
@@ -90,11 +81,9 @@ class API:
 
     @staticmethod
     def __parse_log_line(line):
-        split = line.split('[')
-        time_stamp = split[0]
-        split = split[1].split(']')
-        severity = split[0]
-        message = split[1].replace(": ", "", 1).strip()
+        pattern = r'^(.*?)\[(.*?)\]:\s*(.*)$'
+        match = re.match(pattern, line)
+        time_stamp, severity, message = match.groups()
         return {'time_stamp': time_stamp, 'severity': severity, 'message': message}
 
     @classmethod

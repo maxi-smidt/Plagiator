@@ -213,7 +213,7 @@ function App() {
       return;
     }
     try{
-      let fileA = stats[0].match_history[0] //TODO: replace with more generic path I guess?  
+      let fileA = stats[0].match_history[0]
       let fileB = stats[1].match_history[0]
       const newLineHighlights = {'A' : [fileA.start, fileA.end], 'B' : [fileB.start, fileB.end]}
       setLineHighlights(cloneDeep(newLineHighlights)) 

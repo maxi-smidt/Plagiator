@@ -37,14 +37,14 @@ class DatabaseManager:
 
     @classmethod
     def get_file_by_name(cls, file):
-        r = cls.__select(queries.SELECT_FILE, {'path': file})[0]
+        r = cls.__select(queries.SELECT_FILE, {'path': file}, many=False)
         return {'path': r[0], 'content': r[1], 'contentLength': r[2], 'uploaded': r[3]}
 
     @classmethod
-    def __select(cls, query, params=None):
+    def __select(cls, query, params=None, many=True):
         conn, cur = cls.__open()
         cur.execute(query) if params is None else cur.execute(query, params)
-        result = cur.fetchall()
+        result = cur.fetchall() if many else cur.fetchone()
         cls.__close(conn, cur)
         return result
 

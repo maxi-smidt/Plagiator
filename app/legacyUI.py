@@ -1,4 +1,4 @@
-try:  # TODO is it really possible that tkinter doesnt exist ?
+try:
     import tkinter as tk
     from tkinter import filedialog
 except ImportError:

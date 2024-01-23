@@ -2,6 +2,7 @@ import json
 import re
 import os
 import shutil
+import logging
 
 import html5lib
 import urllib.request
@@ -67,7 +68,7 @@ class MossScanner:
         moss = self.__get_moss(paths)
         try:
             url = moss.send()
-            print(url)
+            logging.info(f"Moss URL: {url}")
             soup = self.__get_soup_from_url(url + '/' + self.__TARGET_FILE)
             data = self.__parse_soup(soup)
         except HTTPError:
