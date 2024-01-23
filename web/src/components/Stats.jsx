@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { isEmpty, isFunction } from "lodash";
 import HistoryElement from "./HistoryElement";
+import { LOG_LEVEL, log } from "../utils/util";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const StatsContainer = styled.div`
@@ -46,27 +48,22 @@ export const has_failed = (a, b) => {
 }
 
 const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
-
-
   const [history, setHistory] = useState([]);
 
-
-
-  const _getHistory = () => {
+  useEffect(() => {
     if (isFunction(window?.pywebview?.api?.get_history)) {
       window.pywebview.api.get_history().then(
         (result) => {
+          console.log("res", result);
           setHistory(result);
-        }
-      );
+        })
     }
-  }
+    else {
+      setHistory([]);
+    }
+  }, [stats])
 
-  useEffect(()=> {
-    setHistory(_getHistory());
-  },[stats])
 
-  
 
   const _getDashboard = () => {
     const a_match = stats[0].match;
@@ -121,9 +118,9 @@ const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
       case 2:
         return (
           <HistoryWrapper>
-           {history.map(element => {
-            return <HistoryElement {...element} key={element.time_stamp}/>
-           })}
+            {history.map(element => {
+              return <HistoryElement {...element} callback={selectedHistoryCallback} key={element.time_stamp} />
+            })}
           </HistoryWrapper>
         )
     }

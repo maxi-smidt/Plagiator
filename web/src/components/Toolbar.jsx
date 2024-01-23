@@ -15,6 +15,7 @@ const lighterColor = "#333842";
 
 const Button4 = styled.button`
 background-color: #333842; 
+  cursor: pointer;
   border: none;
   border-radius: 0.3em;
   color: white;

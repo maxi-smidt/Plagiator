@@ -28,7 +28,7 @@ class DatabaseManager:
         cls.insert_into_files(file_1)
         cls.insert_into_files(file_2)
         cls.__insert(queries.INSERT_INTO_COMPARISONS,
-                     {'file_1': file_1['name'], 'file_2': file_2['name'], 'result': result})
+                     {'file_1': file_1['path'], 'file_2': file_2['path'], 'result': result})
 
     @classmethod
     def get_history(cls):
@@ -37,8 +37,8 @@ class DatabaseManager:
 
     @classmethod
     def get_file_by_name(cls, file):
-        r = cls.__select(queries.SELECT_FILE, {'path': file})
-        return {'path': r[0], 'content': [1], 'contentLength': [2], 'uploaded': [3]}
+        r = cls.__select(queries.SELECT_FILE, {'path': file})[0]
+        return {'path': r[0], 'content': r[1], 'contentLength': r[2], 'uploaded': r[3]}
 
     @classmethod
     def __select(cls, query, params=None):

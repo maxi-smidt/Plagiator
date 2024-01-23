@@ -124,6 +124,7 @@ const MinimizeButton = styled.button`
 function App() {
 
   const [files, setFiles] = useState({'A' : "", 'B': ""});
+  const [useHistory, setUseHistory] = useState(false); 
   const [isInfoOpen, setInfoOpen] = useState(false);
   const [stats, setStats] = useState([]);
   const [lineHighlights, setLineHighlights] = useState({'A' : [0, 0], 'B' : [0, 0]})
@@ -132,6 +133,23 @@ function App() {
     let _files = cloneDeep(files);
     _files[ToolbarID] = FileContent
     setFiles(_files)
+  }
+
+  const _handleHistoryCallback = (file_1, file_2, history) => {
+    console.log(file_1, file_2, history)
+    if(isFunction(window?.pywebview?.api?.get_files)){
+      window?.pywebview?.api.get_files(file_1, file_2)
+      .then((result) => {
+        console.log("HERE WE ARE", result)
+        let rjson = result;
+        
+        let _files = cloneDeep(files);
+        _files["A"] = rjson[0];
+        _files["B"] = rjson[1];
+        setFiles(_files);
+        setUseHistory(JSON.parse(history));
+      })
+    }     
   }
 
   const _closeWindow = () => {
@@ -147,8 +165,13 @@ function App() {
   }
   
   useEffect(() => {
+    console.log(files);
     if(files['A'] && files['B']){
-      console.log('test');
+      if(useHistory){
+        setStats(useHistory.data);
+        setUseHistory(false);
+        return;
+      }
       if(isFunction(window?.pywebview?.api?.compute_comparison)){
         toast.promise(
           new Promise((resolve, reject) => {
@@ -188,6 +211,7 @@ function App() {
 
 
   useEffect(()=>{
+    
     console.log("stats", stats)
     if(stats.length < 2) {
       setLineHighlights(cloneDeep({'A' : [0, 0], 'B' : [0, 0]}))
@@ -239,7 +263,7 @@ function App() {
         code={files['B']?.content || ""}
         lines={lineHighlights.B}
         />
-      <Stats type="output" stats={stats} files={files}/>
+      <Stats type="output" stats={stats} files={files} selectedHistoryCallback={_handleHistoryCallback}/>
     </ContainerDiv>
     <ToastContainer 
     position="bottom-right"

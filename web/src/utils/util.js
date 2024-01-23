@@ -21,7 +21,9 @@ export function log(message,level=LOG_LEVEL.INFO){
     if (isFunction(window?.pywebview?.api?.log)) {
         window.pywebview.api.log(message, level);
     }
-    else {
+    
+    if (DEBUG_MODE()) 
+    {
         switch(level){   
             case LOG_LEVEL.INFO:
                 console.info(message);break;

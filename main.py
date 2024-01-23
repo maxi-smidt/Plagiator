@@ -36,7 +36,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     numeric_log_level = get_numeric_log_level(args.log_level)
-    log_filename = 'plagiator.log' if numeric_log_level == logging.DEBUG else None
+    log_filename = 'plagiator.log' if numeric_log_level == logging.DEBUG or args.debug else None
     logging.basicConfig(format='%(asctime)s[%(levelname)s]: %(message)s',
                         filename=log_filename,
                         level=numeric_log_level,
