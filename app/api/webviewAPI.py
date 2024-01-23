@@ -98,3 +98,8 @@ class API:
         message = split[1].replace(": ", "", 1).strip()
         return {'time_stamp': time_stamp, 'severity': severity, 'message': message}
 
+    @classmethod
+    def get_files(cls, file_1_name, file_2_name):
+        file_1 = dbm.get_file_by_name(file_1_name)
+        file_2 = dbm.get_file_by_name(file_2_name)
+        return {'file_1': file_1, 'file_2': file_2}

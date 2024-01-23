@@ -36,9 +36,13 @@ class DatabaseManager:
         return [{'file_1': e[0], 'file_2': e[1], 'result': e[2], 'time_stamp': e[3]} for e in entries]
 
     @classmethod
-    def __select(cls, query):
+    def get_file_by_name(cls, file):
+        return cls.__select(queries.SELECT_FILE, {'name': file})
+
+    @classmethod
+    def __select(cls, query, params=None):
         conn, cur = cls.__open()
-        cur.execute(query)
+        cur.execute(query) if params is not None else cur.execute(query, params)
         result = cur.fetchall()
         cls.__close(conn, cur)
         return result

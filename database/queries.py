@@ -9,3 +9,7 @@ INSERT_INTO_COMPARISONS = """
 SELECT_ALL_COMPARISONS = """
     SELECT * FROM comparisons ORDER BY time_stamp DESC;
 """
+
+SELECT_FILE = """
+    SELECT file FROM files WHERE name = :name;
+"""

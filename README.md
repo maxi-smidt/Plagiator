@@ -73,6 +73,7 @@ Deactivate the virtual environment with `deactivate`.
 ## Research
 - [A state of art on source code plagiarism detection](https://ieeexplore.ieee.org/abstract/document/7877421)
 - [Winnowing: Local Algorithms for Document Fingerprinting](https://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
+- [How MOSS Works](https://yangdanny97.github.io/blog/2019/05/03/MOSS)
 
 ## Solution
 Using Tensorflow
