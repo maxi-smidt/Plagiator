@@ -28,6 +28,7 @@ def get_numeric_log_level(level):
 def run_cli(file_1_path, file_2_path):
     file_1 = resolve_file(file_1_path)
     file_2 = resolve_file(file_2_path)
+    assert file_1 and file_2
     result = json.loads(MossScanner().compare([file_1, file_2]))
     if result['error'] != '':
         print(f"Error: {result['error']}")
@@ -73,8 +74,8 @@ if __name__ == '__main__':
                         choices=['debug', 'info', 'warning', 'error', 'critical'],
                         help='Set the logging level (default: info)')
     parser.add_argument("--debug", "-d", action='store_true', help="Enable development mode in webview.")
-    parser.add_argument("file1", type=str, help="Path to the first file.")
-    parser.add_argument("file2", type=str, help="Path to the second file.")
+    parser.add_argument("file1", type=str, nargs="?", help="Path to the first file.")
+    parser.add_argument("file2", type=str, nargs="?", help="Path to the second file.")
 
     args = parser.parse_args()
 
