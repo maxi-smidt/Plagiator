@@ -71,6 +71,9 @@ const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
   const _getDashboard = () => {
     const a_match = stats[0].match;
     const b_match = stats[1].match;
+
+    const max_match = Math.max(a_match, b_match);
+
     const failed = has_failed(a_match, b_match);
     return (
       <>
