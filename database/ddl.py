@@ -1,7 +1,9 @@
 CREATE_TABLE_FILE = """
     CREATE TABLE IF NOT EXISTS files (
-        name VARCHAR(255) PRIMARY KEY,
-        file TEXT NOT NULL
+        path VARCHAR(255) PRIMARY KEY,
+        content TEXT NOT NULL,
+        contentlength INTEGER NOT NULL,
+        uploaded TIMESTAMP NOT NULL
     );
 """
 

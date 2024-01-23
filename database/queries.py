@@ -1,5 +1,6 @@
 INSERT_INTO_FILES = """
-    INSERT OR IGNORE INTO files (name, file) VALUES (:name, :file);
+    INSERT OR IGNORE INTO files (path, content, contentlength, uploaded) 
+    VALUES (:path, :content, :contentLength, :uploaded);
 """
 
 INSERT_INTO_COMPARISONS = """
@@ -11,5 +12,5 @@ SELECT_ALL_COMPARISONS = """
 """
 
 SELECT_FILE = """
-    SELECT file FROM files WHERE name = :name;
+    SELECT * FROM files WHERE path = :path;
 """

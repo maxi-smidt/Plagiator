@@ -21,7 +21,7 @@ class DatabaseManager:
 
     @classmethod
     def insert_into_files(cls, file):
-        cls.__insert(queries.INSERT_INTO_FILES, {'name': file['name'], 'file': file['content']})
+        cls.__insert(queries.INSERT_INTO_FILES, file)
 
     @classmethod
     def insert_into_comparison(cls, file_1, file_2, result):
@@ -37,12 +37,13 @@ class DatabaseManager:
 
     @classmethod
     def get_file_by_name(cls, file):
-        return cls.__select(queries.SELECT_FILE, {'name': file})
+        r = cls.__select(queries.SELECT_FILE, {'path': file})
+        return {'path': r[0], 'content': [1], 'contentLength': [2], 'uploaded': [3]}
 
     @classmethod
     def __select(cls, query, params=None):
         conn, cur = cls.__open()
-        cur.execute(query) if params is not None else cur.execute(query, params)
+        cur.execute(query) if params is None else cur.execute(query, params)
         result = cur.fetchall()
         cls.__close(conn, cur)
         return result

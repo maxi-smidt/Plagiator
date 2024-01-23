@@ -71,8 +71,7 @@ class API:
         # m = MossScanner()
         # result = m.compare([file_1['content'], file_2['content']]) TODO activate moss again
         result = '{"error": "", "data": [{"file_index": "0", "match": "95", "match_history": [{"start": "1", "end": "14", "match": "95"}]}, {"file_index": "1", "match": "95", "match_history": [{"start": "1", "end": "11", "match": "95"}]}]}'
-        dbm.insert_into_comparison({'name': file_1['path'], 'content': file_1['content']},
-                                   {'name': file_2['path'], 'content': file_2['content']}, result)
+        dbm.insert_into_comparison(file_1, file_2, result)
         return result
 
     @classmethod
@@ -100,6 +99,4 @@ class API:
 
     @classmethod
     def get_files(cls, file_1_name, file_2_name):
-        file_1 = dbm.get_file_by_name(file_1_name)
-        file_2 = dbm.get_file_by_name(file_2_name)
-        return {'file_1': file_1, 'file_2': file_2}
+        return [dbm.get_file_by_name(file_1_name), dbm.get_file_by_name(file_2_name)]
