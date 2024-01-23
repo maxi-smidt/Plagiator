@@ -136,11 +136,9 @@ function App() {
   }
 
   const _handleHistoryCallback = (file_1, file_2, history) => {
-    console.log(file_1, file_2, history)
     if(isFunction(window?.pywebview?.api?.get_files)){
       window?.pywebview?.api.get_files(file_1, file_2)
       .then((result) => {
-        console.log("HERE WE ARE", result)
         let rjson = result;
         
         let _files = cloneDeep(files);
@@ -165,7 +163,6 @@ function App() {
   }
   
   useEffect(() => {
-    console.log(files);
     if(files['A'] && files['B']){
       if(useHistory){
         setStats(useHistory.data);
@@ -211,9 +208,7 @@ function App() {
 
 
   useEffect(()=>{
-    
-    console.log("stats", stats)
-    if(stats.length < 2) {
+        if(stats.length < 2) {
       setLineHighlights(cloneDeep({'A' : [0, 0], 'B' : [0, 0]}))
       return;
     }
@@ -222,7 +217,6 @@ function App() {
       let fileB = stats[1].match_history[0]
       const newLineHighlights = {'A' : [fileA.start, fileA.end], 'B' : [fileB.start, fileB.end]}
       setLineHighlights(cloneDeep(newLineHighlights)) 
-      console.log("hln", newLineHighlights)
     }
     catch(e){
       log(e, LOG_LEVEL.WARNING);

@@ -69,7 +69,6 @@ const HistoryElement = ({file_1, file_2, result, time_stamp, callback}) => {
     const _handleClick = (e) => {
       if(disabled)
         return;
-      console.log(file_1, file_2)
       callback(file_1, file_2, result);
     }
 

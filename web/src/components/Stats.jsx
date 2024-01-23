@@ -54,7 +54,7 @@ const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
     if (isFunction(window?.pywebview?.api?.get_history)) {
       window.pywebview.api.get_history().then(
         (result) => {
-          console.log("res", result);
+          log("Loaded history", LOG_LEVEL.INFO);
           setHistory(result);
         })
     }
