@@ -138,7 +138,7 @@ const Stats = ({ stats, files, type, selectedHistoryCallback }) => {
       <Tab onTabSelected={onTabSelected}>
         <TabItem><GoalIcon /> Result</TabItem>
         <TabItem disabled={isEmpty(stats)}><GraphIcon /> Statistics</TabItem>
-        <TabItem disabled={false}><VersionsIcon /> History</TabItem>
+        <TabItem disabled={isEmpty(history)}><VersionsIcon /> History</TabItem>
       </Tab>
       {RenderTab(selectedTab)}
     </StatsContainer>
