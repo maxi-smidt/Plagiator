@@ -6,7 +6,7 @@ from . import queries
 
 
 class DatabaseManager:
-    __DB_PATH = 'database/.plagiator.db'
+    __DB_PATH = '.plagiator.db'
 
     @classmethod
     def init(cls):
