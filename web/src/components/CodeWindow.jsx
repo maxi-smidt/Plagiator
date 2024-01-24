@@ -139,10 +139,14 @@ const readFileAsync = (file) => {
 };
 
 const _getLineStyles = (lineNumber) => {
+
     const style = { display: "block", width: "fit-content" };
-    if (lines[0] <= lineNumber && lines[1] >= lineNumber) {
-      style.backgroundColor = "#fc1d005a";
-    }
+    lines.forEach(({start, end}) => {
+      console.log(start, end);
+      if (start <= lineNumber && lineNumber <= end) {
+        style.backgroundColor = "#fc1d005a";        
+      }
+    });
     return { style };
 }
 
