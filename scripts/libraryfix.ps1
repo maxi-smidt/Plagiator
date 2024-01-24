@@ -1,4 +1,3 @@
-<#
 (Get-Content ".\venv\Lib\site-packages\webview\util.py") |
     Foreach-Object {
         if ($_ -match "^        window.evaluate_js") 
@@ -8,7 +7,7 @@
             $_
         }
     } | Set-Content ".\venv\Lib\site-packages\webview\util.py"
-#>
+
 
 (Get-Content ".\venv\Lib\site-packages\webview\platforms\edgechromium.py") |
     Foreach-Object {
