@@ -75,6 +75,15 @@ In another terminal for the python backend:
 1. make sure to be in the virtual environment (run `.\venv\Scripts\activate`).
 2. run `py main.py` 
 
+_Note:_
+You can supply a few start arguments:
+```sh
+usage: main.py [-h] [--nogui] [--gui [{web,legacy}]]
+               [--loglevel [{debug,info,warning,error,critical}]]
+               [--debug]
+               [file1] [file2]
+```
+
 When you make changes in the frontend, restart the python script. It might be necessary to explicitly close the window before you can restart the script.
 
 ## Build/Freezing
