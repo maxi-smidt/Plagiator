@@ -13,6 +13,8 @@
 - [Build](#buildfreezing)
 - [Research](#research)
 
+Please change the [_user_id_](./app/scanner/moss_scanner.py#L54-L54) for the Moss Connection (register [here](https://theory.stanford.edu/~aiken/moss/)). You can use the Id for tests, but should change it if you use it more often.
+
 ## Introduction
 Plagiator is a fast, scalable and modern plagiarism checker for Matlab Scripts. To compare the files, MOSS - Measure of 
 Software Similarity is used.
