@@ -13,6 +13,8 @@
 - [Build](#buildfreezing)
 - [Research](#research)
 
+Please change the [_user_id_](./app/scanner/moss_scanner.py#L54-L54) for the Moss Connection (register [here](https://theory.stanford.edu/~aiken/moss/)). You can use the Id for tests, but should change it if you use it more often.
+
 ## Introduction
 Plagiator is a fast, scalable and modern plagiarism checker for Matlab Scripts. To compare the files, MOSS - Measure of 
 Software Similarity is used.
@@ -74,6 +76,15 @@ You need to run the frontend in a separate terminal. There you
 In another terminal for the python backend: 
 1. make sure to be in the virtual environment (run `.\venv\Scripts\activate`).
 2. run `py main.py` 
+
+_Note:_
+You can supply a few start arguments:
+```sh
+usage: main.py [-h] [--nogui] [--gui [{web,legacy}]]
+               [--loglevel [{debug,info,warning,error,critical}]]
+               [--debug]
+               [file1] [file2]
+```
 
 When you make changes in the frontend, restart the python script. It might be necessary to explicitly close the window before you can restart the script.
 

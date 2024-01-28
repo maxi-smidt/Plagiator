@@ -10,7 +10,12 @@ import logging
 import json
 from .scanner.moss_scanner import MossScanner
 
+'''
+This is the legacy UI based on TKinter 
 
+How to use:
+Look at main.py
+'''
 class LegacyUI:
     def __init__(self):
         if not TK_FLAG:

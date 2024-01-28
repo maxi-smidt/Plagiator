@@ -209,13 +209,11 @@ function App() {
 
   useEffect(()=>{
         if(stats.length < 2) {
-      setLineHighlights(cloneDeep({'A' : [0, 0], 'B' : [0, 0]}))
+      setLineHighlights(cloneDeep({'A' : [{'start': 0, 'end': 0}], 'B' : [{'start': 0, 'end': 0}]}))
       return;
     }
     try{
-      let fileA = stats[0].match_history[0]
-      let fileB = stats[1].match_history[0]
-      const newLineHighlights = {'A' : [fileA.start, fileA.end], 'B' : [fileB.start, fileB.end]}
+      const newLineHighlights = {'A' : stats[0].match_history, 'B' : stats[1].match_history}
       setLineHighlights(cloneDeep(newLineHighlights)) 
     }
     catch(e){
@@ -224,7 +222,7 @@ function App() {
     }
   }, [stats])
 
-  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "1.2-Beta"]]
+  const _info = [["Web", "Marcel Skumantz"], ["App", "Maxi Smidt"], ["Version", "v1.3-release"]]
   return (
     <>
 
