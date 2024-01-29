@@ -12,7 +12,22 @@
 
 ### Frontend
 
-TODO 
+#### React
+React is a JavaScript program library for creating web-based user interfaces. Components are structured hierarchically in React and can be represented in its syntax as self-defined JSX tags. We are using React together with [webpack](https://webpack.js.org/) to pack the generated source code and make [pywebview](https://pywebview.flowrl.com/) render the generated static files. Using our API and some friendly helper functions from pywebiew, we can call python functions from Javascript.
+
+We also use a few packages for nice visuals.
+- [react-toastify](https://fkhadra.github.io/react-toastify/introduction/)
+- [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
+
+
+#### [App.jsx](web/src/App.jsx)
+This is the Main React component. It employs severall nested Components to split up the functionality. The API calls return `Promises` that we can handle.
+
+#### [CodeWindow.jsx](web/src/components/CodeWindow.jsx)
+This component handles the syntax highlighting as well as highlighting the matched lines.
+
+#### [Modal.jsx](web/src/components/Modal.jsx)
+This more generic component is used to share information. 
 
 ### Backend
 
