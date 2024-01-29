@@ -2,14 +2,14 @@ import os
 import webview
 from .api.webviewAPI import API
 
-'''
-This is the modern UI frontend based on react and pywebview
 
-How to use:
-Look at main.py
-'''
 class WebviewUI:
+    """
+    This is the modern UI frontend based on react and pywebview
 
+    How to use:
+    Look at main.py
+    """
     @staticmethod
     def init(debug):
         api = API(debug)
